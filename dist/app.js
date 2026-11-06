@@ -1,5 +1,5 @@
 import { CAR, advance, dragInput } from './physics.js';
-import { DEFAULT_LAYOUT, createLayout, isBlocked, isParked } from './layout.js';
+import { DEFAULT_LAYOUT, DIMENSION_LIMITS, createLayout, isBlocked, isAtTarget } from './layout.js';
 import { createCollisionSound } from './sound.js';
 
 const $ = id => document.getElementById(id);
@@ -10,11 +10,11 @@ const collisionSound = createCollisionSound(window.AudioContext, message => {
 let contactPosition=null;
 let layout = createLayout();
 let mapCenter = {x:24,y:16.8};
-let car, wheel=0, speed=0, drag=null, mode='map', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false;
+let car, wheel=0, speed=0, drag=null, mode='car', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false, successCelebrated=false;
 function reset() {
   car={...layout.start};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
   mapCenter={x:car.x,y:car.y};
-  contactPosition=null;
+  contactPosition=null;successCelebrated=false;
   updateReadout();
 }
 function stop() {speed=0;drag=null;}
@@ -29,7 +29,25 @@ $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
 $('recenter').onclick=()=>{stop();mapCenter={x:car.x,y:car.y};};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
 function syncDimensions() {
-  for(const key of Object.keys(DEFAULT_LAYOUT))$(key).value=layout[key].toFixed(1);
+  for(const key of Object.keys(DEFAULT_LAYOUT)){
+    $(key).value=layout[key].toFixed(1);updateDimensionButtons(key);
+  }
+}
+function updateDimensionButtons(key) {
+  const value=Number($(key).value), [min,max]=DIMENSION_LIMITS[key];
+  $(`${key}-minus`).disabled=value<=min;$(`${key}-plus`).disabled=value>=max;
+}
+for(const key of Object.keys(DEFAULT_LAYOUT)) {
+  $(key).oninput=()=>updateDimensionButtons(key);
+  for(const [suffix,direction] of [['minus',-1],['plus',1]]) {
+    $(`${key}-${suffix}`).onclick=()=>{
+      const input=$(key);
+      if(!input.reportValidity())return;
+      const [min,max]=DIMENSION_LIMITS[key];
+      input.value=(Math.max(min*10,Math.min(max*10,Math.round(Number(input.value)*10)+direction))/10).toFixed(1);
+      updateDimensionButtons(key);
+    };
+  }
 }
 $('layout-form').onsubmit=e=>{
   e.preventDefault();
@@ -87,7 +105,8 @@ function update(dt) {
       trace.push(rearPoints(car));lastTrace={...car};if(trace.length>3500)trace.shift();
     }
   }
-  parkedOk=isParked(car,layout);
+  parkedOk=speed===0 && !collision && isAtTarget(car,layout);
+  if(parkedOk && !successCelebrated){collisionSound.success();successCelebrated=true;}
   updateReadout();
 }
 function updateReadout() {
@@ -101,7 +120,7 @@ function updateReadout() {
   $('tire-text').textContent=`${Math.round(wheel/CAR.maxWheel*36)}°`;
   $('target-distance').textContent=`目的地まで ${Math.hypot(car.x-layout.target.x,car.y-layout.target.y).toFixed(1)}m`;
   $('dash-wheel').setAttribute('transform',`translate(80 61) rotate(${degrees})`);
-  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'スペースに収まりました。何度でも練習できます。':drag?'中央線で直進。上下にドラッグして前進・後進。':'横位置でハンドル、上下ドラッグでアクセル';
+  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'駐車成功！ きれいに停められました。':drag?'中央線で直進。上下にドラッグして前進・後進。':'点線の車形に合わせて、停めてみましょう';
   if($('status').textContent!==text)$('status').textContent=text;
 }
 function rect(x,y,w,h,color,r=0) {
@@ -136,6 +155,9 @@ function drawMap() {
     text(i===2?'P':`0${i+1}`,bay.x,entrance+.55,.35,i===2?'#739365':'#a6b19c');
   });
   text('P',target.x,target.y,.9,'#91ad7d');text('ここに駐車',target.x,target.y+1.1,.32,'#85a173');
+  ctx.save();ctx.translate(target.x,target.y);ctx.rotate(target.heading);
+  ctx.strokeStyle=parkedOk?'#548d58':'#548590';ctx.lineWidth=.06;ctx.setLineDash([.2,.13]);
+  ctx.strokeRect(-CAR.length/2,-CAR.width/2,CAR.length,CAR.width);ctx.setLineDash([]);ctx.restore();
   const aisleCenter=entrance+aisleWidth/2;
   line([{x:left+1,y:aisleCenter},{x:right-1,y:aisleCenter}],'#dfe4d7',.055,[.5,.5]);
   for(const x of [left+2,right-2]) {

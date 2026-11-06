@@ -29,3 +29,12 @@ export function isBlocked(car, layout) {
 export function isParked(car, layout) {
   return corners(car).every(p => p.x > layout.target.x - layout.bayWidth / 2 && p.x < layout.target.x + layout.bayWidth / 2 && p.y > layout.top && p.y < layout.entrance);
 }
+
+export function isAtTarget(car, layout) {
+  const dx=car.x-layout.target.x, dy=car.y-layout.target.y;
+  const c=Math.cos(layout.target.heading), s=Math.sin(layout.target.heading);
+  const longitudinal=Math.abs(dx*c+dy*s), lateral=Math.abs(-dx*s+dy*c);
+  // The outline is symmetric: both nose-in and reverse parking are accepted.
+  const angle=Math.acos(Math.min(1,Math.abs(Math.cos(car.heading-layout.target.heading))));
+  return lateral<=.2 && longitudinal<=.35 && angle<=8*Math.PI/180 && isParked(car,layout) && !isBlocked(car,layout);
+}

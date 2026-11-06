@@ -12,7 +12,7 @@ test('audio is initialized by user interaction and the buzz has a bounded envelo
       nodes.push(node);return node;
     }
     createBiquadFilter(){const node={frequency:{setValueAtTime(){}},connect(){},disconnect(){this.disconnected=true;}};nodes.push(node);return node;}
-    createGain(){const values=[];const node={values,gain:{setValueAtTime(v){values.push(v);},linearRampToValueAtTime(v){values.push(v);}},connect(){},disconnect(){this.disconnected=true;}};nodes.push(node);return node;}
+    createGain(){const values=[];const node={values,gain:{setValueAtTime(v){values.push(v);},linearRampToValueAtTime(v){values.push(v);},exponentialRampToValueAtTime(v){values.push(v);}},connect(){},disconnect(){this.disconnected=true;}};nodes.push(node);return node;}
   }
   const sound=createCollisionSound(FakeAudioContext);
   sound.buzz();assert.equal(instances,0);
@@ -21,6 +21,11 @@ test('audio is initialized by user interaction and the buzz has a bounded envelo
   assert.ok(Math.abs(nodes[0].stopTime-nodes[0].startTime-.36)<1e-8);
   assert.equal(nodes[2].values.at(-1),0);
   nodes[0].onended();assert.ok(nodes.every(node=>node.disconnected));
+  sound.success();
+  const melody=nodes.slice(3).filter(node=>node.frequency);
+  assert.equal(melody.length,6);assert.ok(melody.every(node=>node.type==='sine'));
+  assert.ok(melody[3].startTime>melody[0].startTime);
+  for(const node of melody)node.onended();assert.ok(nodes.every(node=>node.disconnected));
 });
 
 test('unavailable or blocked audio reports one error and stops retrying',async()=>{

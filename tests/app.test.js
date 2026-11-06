@@ -12,12 +12,19 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
     return elements.get(id);
   }
   const document={getElementById:element,addEventListener(k,fn){events[k]=fn;}};
-  const soundCalls={unlocks:0,buzzes:0};
-  const createCollisionSound=()=>({unlock(){soundCalls.unlocks++;},buzz(){soundCalls.buzzes++;}});
+  const soundCalls={unlocks:0,buzzes:0,successes:0};
+  const createCollisionSound=()=>({unlock(){soundCalls.unlocks++;},buzz(){soundCalls.buzzes++;},success(){soundCalls.successes++;}});
   const context=vm.createContext({...physics,...layouts,createCollisionSound,document,window:{addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
   const source=fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
   vm.runInContext(source,context);
   const read=expression=>vm.runInContext(expression,context);
+  assert.equal(read('mode'),'car');
+  element('bayWidth-plus').onclick();assert.equal(element('bayWidth').value,'3.5');
+  assert.equal(read('layout.bayWidth'),3.4,'stepper edits the draft until Apply');
+  element('bayWidth-minus').onclick();assert.equal(element('bayWidth').value,'3.4');
+  element('bayWidth').value='4.0';element('bayWidth-plus').onclick();assert.equal(element('bayWidth').value,'4.0');assert.equal(element('bayWidth-plus').disabled,true);
+  element('bayWidth').value='2.2';element('bayWidth-minus').onclick();assert.equal(element('bayWidth').value,'2.2');assert.equal(element('bayWidth-minus').disabled,true);
+  element('layout-defaults').onclick();
   const pointer=(x,y,control=false)=>({clientX:x,clientY:y,pointerId:1,pointerType:'touch',target:{closest:()=>control?{}:null},preventDefault(){}});
   events.pointerdown(pointer(220,200));
   assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
@@ -50,4 +57,9 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
   element('reset').onclick();assert.equal(read('contactPosition'),null);
   read('car={x:layout.parked[0].x,y:layout.parked[0].y+CAR.length+.005,heading:-Math.PI/2};wheel=0;speed=1;update(.02)');
   assert.equal(read('collision'),true);assert.equal(soundCalls.buzzes,3,'parked cars also trigger sound');
+  read('car={...layout.target};speed=1;update(0)');assert.equal(soundCalls.successes,0,'passing through target is not success');
+  read('stop();update(.02)');assert.equal(read('parkedOk'),true);assert.equal(soundCalls.successes,1);
+  read('update(.02);update(.02)');assert.equal(soundCalls.successes,1,'success is celebrated once per practice');
+  read('car={...layout.start};update(.02);car={...layout.target};update(.02)');assert.equal(soundCalls.successes,1);
+  element('reset').onclick();read('car={...layout.target};update(.02)');assert.equal(soundCalls.successes,2,'reset starts a new practice');
 });
