@@ -1,11 +1,17 @@
 import { CAR, advance, dragInput } from './physics.js';
 import { DEFAULT_LAYOUT, DIMENSION_LIMITS, createLayout, isBlocked, isAtTarget } from './layout.js';
-import { createCollisionSound } from './sound.js';
+import { createCollisionSound } from './sound.js?v=signal-1';
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene'), ctx = canvas.getContext('2d');
+let latestSoundId=0;
 const collisionSound = createCollisionSound(window.AudioContext, message => {
   $('sound-status').hidden=false;$('sound-status').textContent=message;
+}, event => {
+  if(event.id<latestSoundId)return;latestSoundId=event.id;
+  const label=event.kind==='collision'?'衝突音':'成功音';
+  const messages={scheduled:'再生を予約しました',signal:'音声の波形を確認しました',paused:'音声処理が停止しました','not-observed':'音声の波形を確認できませんでした',failed:'音声を開始できませんでした'};
+  $('sound-signal').textContent=`${label}：${messages[event.phase]}`;
 });
 let contactPosition=null, audioReady=false, gestureVersion=0;
 let layout = createLayout();
@@ -46,6 +52,7 @@ async function enableSound() {
   $('sound-start-status').textContent=ready?'':$('sound-status').textContent;
 }
 $('sound-test').onclick=enableSound;$('sound-start').onclick=enableSound;
+$('collision-test').onclick=()=>{stop();return playEffect('collision','衝突テスト音');};
 function syncDimensions() {
   for(const key of Object.keys(DEFAULT_LAYOUT)){
     $(key).value=layout[key].toFixed(1);updateDimensionButtons(key);

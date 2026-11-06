@@ -31,7 +31,9 @@
         <label class="toggle-row"><span>後輪の軌跡を表示</span><input id="trail" type="checkbox" checked><i></i></label>
         <label class="toggle-row"><span>進む先のガイドを表示</span><input id="guide" type="checkbox" checked><i></i></label>
         <button id="sound-test" type="button" class="button center sound-test">♪ 音をテスト・有効にする</button>
+        <button id="collision-test" type="button" class="button center sound-test">衝突音だけテスト</button>
         <p id="sound-status" class="dimension-note" role="status" hidden></p>
+        <p id="sound-signal" class="dimension-note" role="status">音声の確認待ち</p>
         <div class="tip"><span>↳</span><div><strong>後輪の動きに注目</strong><p>バックすると、後輪はハンドルを切った側へ。車の前側は反対側へ振れます。</p></div></div>
       </aside>
     </section>
@@ -49,5 +51,5 @@
     <footer><span>焦らず、何度でも。</span><span>学習用の簡易モデルです。実車の運転は指導者のもとで行ってください。</span></footer>
   </main>
   <dialog id="help-dialog"><form method="dialog"><button class="close button" aria-label="閉じる">×</button><div class="eyebrow">HOW TO PLAY</div><h2>どこからでも、ドラッグ。</h2><p>練習画面の好きな場所を押し、そこから指やマウスを動かします。横位置がハンドル角度、押した位置からの上下の移動量がアクセルになります。</p><p><b>上下：</b>上へ動かすと前進、下へ動かすと後進。開始位置に戻すと停止します。</p><p><b>左右：</b>練習画面の中央線で直進です。中央から左で左へ、右で右へ切れます。左右の端でハンドル1.5回転、前輪は最大36°です。横位置を押すだけでも角度を変更できます。</p><p><b>離す：</b>即停止し、ハンドル角度は保持します。次に押した横位置で角度が決まります。「ハンドルをまっすぐに」で戻せます。</p><p><b>目標：</b>緑のスペース中央の点線の車形に合わせ、ほぼ同じ位置と向きで停止すると成功です。前向き・後ろ向きのどちらでも成功になります。接触すると止まります。逆方向のドラッグで離れられます。</p><p>拡大表示で車が画面外へ出たら「車の位置へ」で表示を戻せます。速度は上下のドラッグ量に比例し、最大7.2km/h。車を固定すると、車の位置と向きを固定して地図が動きます。</p><button class="button primary">練習をはじめる →</button></form></dialog>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=signal-1"></script>
 </body></html>

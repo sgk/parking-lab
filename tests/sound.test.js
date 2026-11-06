@@ -14,7 +14,7 @@ test('test, collision and success share one context and schedule complete future
   assert.equal(await sound.play('collision'),true);
   assert.equal(context.resumes,2);assert.equal(mock.contexts.length,1);
   const buzz=mock.oscillators().at(-1);
-  assert.equal(buzz.type,'square');assert.ok(Math.abs(buzz.stopTime-buzz.startTime-.36)<1e-8);
+  assert.equal(buzz.type,'square');assert.ok(Math.abs(buzz.stopTime-buzz.startTime-.5)<1e-8);
   context.state='suspended';assert.equal(await sound.play('success'),true);assert.equal(context.resumes,3);
   for(const oscillator of mock.oscillators())oscillator.onended();
   assert.ok(mock.nodes.every(n=>n.disconnected));
@@ -47,4 +47,18 @@ test('unsupported and rejected audio report failure and stop without retries or 
   const denied=createCollisionSound(RefusedContext,()=>errors++);
   assert.equal(await denied.play('success'),false);assert.equal(await denied.play('collision'),false);
   assert.equal(attempts,1);assert.equal(errors,2);
+});
+
+test('diagnostics distinguish scheduled sound, generated samples, silence and interrupted audio',async()=>{
+  for(const scenario of ['signal','silence','paused']) {
+    const mock=createAudioMock(),events=[];
+    const sound=createCollisionSound(mock.AudioContext,()=>{},event=>events.push(event));
+    await sound.play('collision');assert.equal(events[0].phase,'scheduled');
+    if(scenario==='silence')mock.contexts[0].signalLevel=0;
+    if(scenario==='paused'){mock.contexts[0].signalLevel=0;mock.contexts[0].state='suspended';}
+    if(scenario!=='silence')await new Promise(resolve=>setTimeout(resolve,40));
+    for(const oscillator of mock.oscillators())oscillator.onended();
+    assert.equal(events.at(-1).phase,scenario==='silence'?'not-observed':scenario);
+    assert.ok(mock.nodes.every(n=>n.disconnected));
+  }
 });

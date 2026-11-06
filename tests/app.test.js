@@ -54,6 +54,8 @@ test('collision audio survives suspension, sounds while held, and rearms on a ne
   await flush();assert.equal(audio.oscillators().length,8);
   read('speed=-1;update(.2);speed=1;update(.3)');await flush();assert.equal(audio.oscillators().length,9);
   assert.match(element('sound-status').textContent,/衝突音の再生/);
+  await element('collision-test').onclick();assert.equal(audio.oscillators().length,10);
+  assert.match(element('sound-status').textContent,/衝突テスト音/);
 });
 
 test('success audio uses the exact test path, waits for resume, and repeats on each new successful operation',async()=>{
