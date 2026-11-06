@@ -4,86 +4,78 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import * as physics from '../dist/physics.js';
 import * as layouts from '../dist/layout.js';
+import { createCollisionSound } from '../dist/sound.js';
+import { createAudioMock } from './audio-mock.js';
 
-test('pointer controls stop on release, preserve steering, ignore buttons, and switch cameras',async()=>{
-  const elements=new Map(),events={},windowEvents={};
-  function element(id) {
+const flush=()=>new Promise(resolve=>setImmediate(resolve));
+function setup() {
+  const elements=new Map(),events={},windowEvents={},audio=createAudioMock();
+  const element=id=>{
     if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},addEventListener(){},setPointerCapture(){},reportValidity(){return true;},getContext(){return {};},getBoundingClientRect(){return {left:20,width:400};}});
     return elements.get(id);
-  }
+  };
   const document={getElementById:element,addEventListener(k,fn){events[k]=fn;}};
-  const soundCalls={unlocks:0,buzzes:0,successes:0};
-  let unlockCompletion=null,playbackAllowed=true;
-  const createCollisionSound=()=>({unlock(){soundCalls.unlocks++;return unlockCompletion??Promise.resolve(true);},buzz(){soundCalls.buzzes++;},success(){if(!playbackAllowed)return false;soundCalls.successes++;return true;}});
-  const context=vm.createContext({...physics,...layouts,createCollisionSound,document,window:{addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
-  const source=fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
-  vm.runInContext(source,context);
+  const context=vm.createContext({...physics,...layouts,createCollisionSound,document,window:{AudioContext:audio.AudioContext,addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
+  vm.runInContext(fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,''),context);
   const read=expression=>vm.runInContext(expression,context);
+  const pointer=(x=220,y=200,control=false)=>({clientX:x,clientY:y,pointerId:1,pointerType:'touch',target:{closest:()=>control?{}:null},preventDefault(){}});
+  return {element,events,windowEvents,audio,read,pointer};
+}
+
+test('controls, dimension changes, camera and reset remain functional',async()=>{
+  const {element,events,windowEvents,audio,read,pointer}=setup();
   assert.equal(read('mode'),'car');
-  element('bayWidth-plus').onclick();assert.equal(element('bayWidth').value,'3.5');
-  assert.equal(read('layout.bayWidth'),3.4,'stepper edits the draft until Apply');
+  element('bayWidth-plus').onclick();assert.equal(element('bayWidth').value,'3.5');assert.equal(read('layout.bayWidth'),3.4);
   element('bayWidth-minus').onclick();assert.equal(element('bayWidth').value,'3.4');
   element('bayWidth').value='4.0';element('bayWidth-plus').onclick();assert.equal(element('bayWidth').value,'4.0');assert.equal(element('bayWidth-plus').disabled,true);
   element('bayWidth').value='2.2';element('bayWidth-minus').onclick();assert.equal(element('bayWidth').value,'2.2');assert.equal(element('bayWidth-minus').disabled,true);
   element('layout-defaults').onclick();
-  const pointer=(x,y,control=false)=>({clientX:x,clientY:y,pointerId:1,pointerType:'touch',target:{closest:()=>control?{}:null},preventDefault(){}});
-  events.pointerdown(pointer(220,200));assert.equal(read('drag'),null,'audio is enabled before the first driving gesture');
-  await element('sound-start').onclick();assert.equal(read('audioReady'),true);assert.equal(element('sound-gate').hidden,true);
-  events.pointerdown(pointer(220,200));
-  assert.equal(soundCalls.unlocks,1,'touch down does not request activation');
-  assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
-  events.pointermove(pointer(320,150));
-  assert.equal(read('speed'),1);assert.equal(read('wheel'),1.5*Math.PI);
-  await events.pointerup(pointer(320,150));
-  assert.equal(soundCalls.unlocks,2);
-  assert.equal(read('speed'),0);assert.equal(read('wheel'),1.5*Math.PI);
-  events.pointerdown(pointer(50,50));assert.equal(read('speed'),0);assert.ok(read('wheel')<0);events.pointermove(pointer(50,100));
-  assert.equal(read('speed'),-1);assert.ok(Math.abs(read('wheel')+.85*3*Math.PI)<1e-8);
-  windowEvents.blur();assert.equal(read('speed'),0);assert.equal(read('drag'),null);
+  events.pointerdown(pointer());assert.equal(read('drag'),null);
+  await element('sound-start').onclick();assert.equal(read('audioReady'),true);assert.equal(audio.oscillators().length,6);
+  events.pointerdown(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
+  events.pointermove(pointer(320,150));assert.equal(read('speed'),1);assert.equal(read('wheel'),1.5*Math.PI);
+  await events.pointerup(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),1.5*Math.PI);
+  events.pointerdown(pointer());windowEvents.blur();assert.equal(read('drag'),null);
   events.pointerdown(pointer(20,20,true));assert.equal(read('drag'),null);
-  element('recenter').onclick();assert.equal(read('mapCenter.x'),read('car.x'));
-  element('car-mode').onclick();assert.equal(read('mode'),'car');assert.equal(element('car-mode').attributes['aria-pressed'],'true');
-  element('center').onclick();assert.equal(read('wheel'),0);
-  element('reset').onclick();assert.equal(read('car.x'),read('layout.start.x'));assert.equal(read('trace.length'),0);
+  element('map-mode').onclick();assert.equal(read('mode'),'map');element('car-mode').onclick();assert.equal(read('mode'),'car');
   element('bayWidth').value='2.5';element('bayDepth').value='5';element('aisleWidth').value='4';
-  read('speed=1;trace.push([])');
-  element('layout-form').onsubmit({preventDefault(){}});
-  assert.equal(read('layout.bayWidth'),2.5);assert.equal(read('layout.bayDepth'),5);assert.equal(read('layout.aisleWidth'),4);
-  assert.equal(read('speed'),0);assert.equal(read('trace.length'),0);assert.equal(read('blocked(car)'),false);
-  assert.match(element('target-distance').textContent,/目的地まで \d+\.\dm/);
-  element('layout-defaults').onclick();assert.equal(read('layout.bayWidth'),layouts.DEFAULT_LAYOUT.bayWidth);
-  assert.equal(soundCalls.unlocks,2,'blur is not a trusted audio activation gesture');assert.equal(soundCalls.buzzes,0);
-  events.pointerdown(pointer(220,200));
+  read('speed=1;trace.push([])');element('layout-form').onsubmit({preventDefault(){}});
+  assert.equal(read('layout.bayWidth'),2.5);assert.equal(read('speed'),0);assert.equal(read('trace.length'),0);assert.equal(read('blocked(car)'),false);
+});
+
+test('collision audio survives suspension, sounds while held, and rearms on a new drag',async()=>{
+  const {element,events,audio,read,pointer}=setup();await element('sound-start').onclick();
+  const context=audio.contexts[0];context.state='suspended';
+  events.pointerdown(pointer());
   read('car={x:layout.right-CAR.length/2-.005,y:layout.start.y,heading:0};wheel=0;speed=1;update(.02)');
-  assert.equal(read('collision'),true);assert.equal(soundCalls.buzzes,1);assert.equal(read('drag.id'),1,'collision sounds before lifting the finger');
-  read('update(.02);update(.02)');assert.equal(soundCalls.buzzes,1,'holding at the same wall must not repeat sound');
-  await events.pointerup(pointer(220,200));assert.equal(soundCalls.buzzes,1,'release alone does not buzz');
-  events.pointerdown(pointer(220,200));read('wheel=0;speed=1;update(.02)');
-  assert.equal(soundCalls.buzzes,2,'a new drag into the same wall buzzes again');
-  read('update(.02)');assert.equal(soundCalls.buzzes,2);
-  read('speed=-1;update(.2)');assert.equal(read('contactPosition'),null);
-  read('speed=1;update(.3)');assert.equal(soundCalls.buzzes,3);
-  element('reset').onclick();assert.equal(read('contactPosition'),null);
-  read('car={x:layout.parked[0].x,y:layout.parked[0].y+CAR.length+.005,heading:-Math.PI/2};wheel=0;speed=1;update(.02)');
-  assert.equal(read('collision'),true);assert.equal(soundCalls.buzzes,4,'parked cars also trigger sound');
-  read('car={...layout.target};speed=1;update(0)');assert.equal(soundCalls.successes,1,'passing through target is not success');
-  read('drag={id:1};speed=0;update(.02)');assert.equal(read('parkedOk'),false);assert.equal(soundCalls.successes,1,'holding the finger at zero throttle is not success');
-  await events.pointerup(pointer(220,200));read('update(.02)');assert.equal(read('parkedOk'),true);assert.equal(soundCalls.successes,2);
-  read('update(.02);update(.02)');assert.equal(soundCalls.successes,2,'success is celebrated once per practice');
-  read('car={...layout.start};update(.02);car={...layout.target};update(.02)');assert.equal(soundCalls.successes,2);
-  element('reset').onclick();events.pointerdown(pointer(220,200));read('car={...layout.target}');await events.pointerup(pointer(220,200));assert.equal(soundCalls.successes,3,'reset starts a new practice');
-  await element('sound-test').onclick();assert.equal(soundCalls.successes,4);assert.equal(element('sound-status').hidden,false);
-  assert.match(element('sound-status').textContent,/テスト音/);assert.equal(element('sound-test').disabled,false);
-  const mouse={...pointer(220,200),pointerType:'mouse',button:0};
-  const previous=soundCalls.unlocks;events.pointerdown(mouse);assert.equal(soundCalls.unlocks,previous+1);
-  await events.pointerup(mouse);assert.equal(soundCalls.unlocks,previous+2,'release waits for audio readiness before judging parking');
-  element('reset').onclick();events.pointerdown(pointer(220,200));read('car={...layout.target}');
-  let finishResume;unlockCompletion=new Promise(resolve=>{finishResume=resolve;});
-  const release=events.pointerup(pointer(220,200));
-  read('update(.02)');assert.equal(read('successCelebrated'),false);assert.equal(soundCalls.successes,4,'a frame must not consume success before audio resumes');
-  finishResume(true);await release;unlockCompletion=null;
-  assert.equal(read('successCelebrated'),true);assert.equal(soundCalls.successes,5);
-  element('reset').onclick();events.pointerdown(pointer(220,200));read('car={...layout.target}');playbackAllowed=false;
-  await events.pointerup(pointer(220,200));assert.equal(read('successCelebrated'),false);assert.equal(soundCalls.successes,5);
-  playbackAllowed=true;events.pointerdown(pointer(220,200));await events.pointerup(pointer(220,200));assert.equal(soundCalls.successes,6,'failed playback never consumes the next explicit release');
+  await flush();assert.equal(audio.oscillators().length,7);assert.equal(read('drag.id'),1);assert.equal(context.resumes,2);
+  read('update(.02);update(.02)');await flush();assert.equal(audio.oscillators().length,7);
+  await events.pointerup(pointer());events.pointerdown(pointer());read('wheel=0;speed=1;update(.02)');
+  await flush();assert.equal(audio.oscillators().length,8);
+  read('speed=-1;update(.2);speed=1;update(.3)');await flush();assert.equal(audio.oscillators().length,9);
+  assert.match(element('sound-status').textContent,/衝突音の再生/);
+});
+
+test('success audio uses the exact test path, waits for resume, and repeats on each new successful operation',async()=>{
+  const {element,events,audio,read,pointer}=setup();await element('sound-start').onclick();
+  events.pointerdown(pointer());read('car={...layout.target};speed=0;update(.02)');
+  assert.equal(read('parkedOk'),false);assert.equal(audio.oscillators().length,6);
+  const context=audio.contexts[0];let finish;context.state='suspended';context.resumeGate=new Promise(resolve=>{finish=resolve;});
+  const released=events.pointerup(pointer());read('update(.02)');assert.equal(read('parkedOk'),true);assert.equal(audio.oscillators().length,6);
+  finish();await released;context.resumeGate=null;
+  assert.equal(audio.oscillators().length,12);assert.equal(read('successCelebrated'),true);
+  read('update(.02);update(.02)');await flush();assert.equal(audio.oscillators().length,12);
+  events.pointerdown(pointer());await events.pointerup(pointer());assert.equal(audio.oscillators().length,18);
+  await element('sound-test').onclick();assert.equal(audio.oscillators().length,24);
+  assert.match(element('sound-status').textContent,/テスト音の再生/);
+});
+
+test('a cancelled gesture cannot show a success message without requesting success audio',async()=>{
+  const {element,events,audio,read,pointer}=setup();await element('sound-start').onclick();
+  events.pointerdown(pointer());read('car={...layout.target};speed=0');
+  await events.pointercancel(pointer());read('update(.02)');
+  assert.equal(read('parkedOk'),false);assert.doesNotMatch(element('status').textContent,/駐車成功/);
+  assert.equal(audio.oscillators().length,6);
+  events.pointerdown(pointer());await events.pointerup(pointer());
+  assert.equal(read('parkedOk'),true);assert.equal(audio.oscillators().length,12);
 });

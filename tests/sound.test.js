@@ -1,54 +1,50 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCollisionSound } from '../dist/sound.js';
+import { createAudioMock } from './audio-mock.js';
 
-test('audio is initialized by user interaction and the buzz has a bounded envelope and cleanup',async()=>{
-  let instances=0,resumes=0;const nodes=[];
-  class FakeAudioContext {
-    constructor(){instances++;this.state='suspended';this.currentTime=10;this.destination={};}
-    resume(){resumes++;this.state='running';return Promise.resolve();}
-    createOscillator(){
-      const node={frequency:{setValueAtTime(){},linearRampToValueAtTime(){}},connect(){},disconnect(){this.disconnected=true;},start(time){this.startTime=time;},stop(time){this.stopTime=time;}};
-      nodes.push(node);return node;
-    }
-    createBiquadFilter(){const node={frequency:{setValueAtTime(){}},connect(){},disconnect(){this.disconnected=true;}};nodes.push(node);return node;}
-    createGain(){const values=[];const node={values,gain:{setValueAtTime(v){values.push(v);},linearRampToValueAtTime(v){values.push(v);},exponentialRampToValueAtTime(v){values.push(v);}},connect(){},disconnect(){this.disconnected=true;}};nodes.push(node);return node;}
-  }
-  const sound=createCollisionSound(FakeAudioContext);
-  sound.buzz();assert.equal(instances,0);
-  assert.equal(await sound.unlock(),true);assert.equal(await sound.unlock(),true);assert.equal(instances,1);assert.equal(resumes,1);
-  sound.buzz();assert.equal(nodes[0].type,'square');
-  assert.ok(Math.abs(nodes[0].stopTime-nodes[0].startTime-.36)<1e-8);
-  assert.equal(nodes[2].values.at(-1),0);
-  nodes[0].onended();assert.ok(nodes.every(node=>node.disconnected));
-  assert.equal(sound.success(),true);
-  const melody=nodes.slice(3).filter(node=>node.frequency);
-  assert.equal(melody.length,6);assert.ok(melody.every(node=>node.type==='triangle'));
-  assert.ok(melody[3].startTime>melody[0].startTime);
-  for(const node of melody)node.onended();assert.ok(nodes.every(node=>node.disconnected));
+test('test, collision and success share one context and schedule complete future envelopes',async()=>{
+  const mock=createAudioMock(),sound=createCollisionSound(mock.AudioContext);
+  assert.equal(mock.contexts.length,0);
+  assert.equal(await sound.play('success'),true);
+  const context=mock.contexts[0];
+  assert.equal(context.resumes,1);assert.equal(mock.oscillators().length,6);
+  for(const oscillator of mock.oscillators())assert.ok(oscillator.startTime>=context.currentTime+.04);
+  context.state='suspended';
+  assert.equal(await sound.play('collision'),true);
+  assert.equal(context.resumes,2);assert.equal(mock.contexts.length,1);
+  const buzz=mock.oscillators().at(-1);
+  assert.equal(buzz.type,'square');assert.ok(Math.abs(buzz.stopTime-buzz.startTime-.36)<1e-8);
+  context.state='suspended';assert.equal(await sound.play('success'),true);assert.equal(context.resumes,3);
+  for(const oscillator of mock.oscillators())oscillator.onended();
+  assert.ok(mock.nodes.every(n=>n.disconnected));
 });
 
-test('unavailable or blocked audio reports one error and stops retrying',async()=>{
+test('both game sounds wait for delayed audio resume instead of silently dropping the event',async()=>{
+  for(const kind of ['collision','success']) {
+    const mock=createAudioMock(),sound=createCollisionSound(mock.AudioContext);
+    await sound.play('success');const context=mock.contexts[0],before=mock.oscillators().length;
+    let finish;context.state='suspended';context.resumeGate=new Promise(resolve=>{finish=resolve;});
+    const playing=sound.play(kind);await Promise.resolve();assert.equal(mock.oscillators().length,before);
+    finish();assert.equal(await playing,true);assert.equal(mock.oscillators().length,before+(kind==='success'?6:1));
+  }
+});
+
+test('concurrent events share one pending resume and each keep their requested sound',async()=>{
+  const mock=createAudioMock(),sound=createCollisionSound(mock.AudioContext);
+  await sound.play('success');const context=mock.contexts[0];
+  let finish;context.state='suspended';context.resumeGate=new Promise(resolve=>{finish=resolve;});
+  const collision=sound.play('collision'),success=sound.play('success');
+  assert.equal(context.resumes,2);finish();
+  assert.deepEqual(await Promise.all([collision,success]),[true,true]);assert.equal(mock.oscillators().length,13);
+});
+
+test('unsupported and rejected audio report failure and stop without retries or alternate methods',async()=>{
   let errors=0,attempts=0;
   const missing=createCollisionSound(undefined,()=>errors++);
-  missing.unlock();missing.unlock();missing.buzz();assert.equal(errors,1);
-  class RefusedAudioContext {
-    constructor(){this.state='suspended';attempts++;}
-    resume(){return Promise.reject(new Error('Audio blocked'));}
-  }
-  const denied=createCollisionSound(RefusedAudioContext,()=>errors++);
-  assert.equal(await denied.unlock(),false);assert.equal(await denied.unlock(),false);denied.buzz();
+  assert.equal(await missing.play('collision'),false);assert.equal(await missing.play('success'),false);assert.equal(errors,1);
+  class RefusedContext {constructor(){this.state='suspended';attempts++;}resume(){return Promise.reject(new Error('blocked'));}}
+  const denied=createCollisionSound(RefusedContext,()=>errors++);
+  assert.equal(await denied.play('success'),false);assert.equal(await denied.play('collision'),false);
   assert.equal(attempts,1);assert.equal(errors,2);
-});
-
-test('test playback waits until asynchronous audio activation completes',async()=>{
-  let finishResume,oscillators=0;
-  class DelayedAudioContext {
-    constructor(){this.state='suspended';}
-    resume(){return new Promise(resolve=>{finishResume=()=>{this.state='running';resolve();};});}
-    createOscillator(){oscillators++;throw Error('Unused synthesis in this test');}
-  }
-  const sound=createCollisionSound(DelayedAudioContext);
-  const ready=sound.unlock();assert.equal(sound.success(),false);assert.equal(oscillators,0);
-  finishResume();assert.equal(await ready,true);
 });

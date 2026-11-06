@@ -28,13 +28,18 @@ $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car'
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
 $('recenter').onclick=()=>{stop();mapCenter={x:car.x,y:car.y};};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
+async function playEffect(kind, label=kind==='success'?'成功音':'衝突音') {
+  const played=await collisionSound.play(kind);
+  $('sound-status').hidden=false;
+  $('sound-status').textContent=played?`${label}の再生を開始しました。`:`${label}を再生できませんでした。「音をテスト」で確認してください。`;
+  return played;
+}
 async function enableSound() {
   stop();$('sound-test').disabled=true;$('sound-start').disabled=true;
-  const ready=await collisionSound.unlock();
+  const ready=await playEffect('success','テスト音');
   $('sound-test').disabled=false;$('sound-start').disabled=false;$('sound-status').hidden=false;
   if(ready){
     audioReady=true;contactPosition=null;$('sound-gate').hidden=true;
-    if(collisionSound.success())$('sound-status').textContent='テスト音を再生しました。聞こえない場合はメディア音量・出力先・サイトの音声設定を確認してください。';
   } else if(!$('sound-status').textContent) {
     $('sound-status').textContent='音声が停止しています。ブラウザの音声設定を確認して再読み込みしてください。';
   }
@@ -75,9 +80,7 @@ canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, label, dialog'))return;
   if(!audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
-  contactPosition=null;gestureVersion++;
-  // Mouse activation occurs on down; touch/pen activation occurs on up.
-  if(e.pointerType==='mouse')collisionSound.unlock();
+  contactPosition=null;successCelebrated=false;parkedOk=false;gestureVersion++;
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
   drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0};speed=0;
   const bounds=canvas.getBoundingClientRect();
@@ -94,10 +97,7 @@ for(const event of ['pointerup','pointercancel','lostpointercapture']) document.
   if(drag?.id!==e.pointerId)return;
   stop();
   if(event!=='pointerup')return;
-  const releasedVersion=gestureVersion;
-  const ready=await collisionSound.unlock();
-  if(!ready || drag || releasedVersion!==gestureVersion)return;
-  completeParking();
+  await completeParking();
 });
 window.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Escape'){stop();if(e.code==='Space'&&e.target===canvas)e.preventDefault();}});
 
@@ -108,15 +108,12 @@ function rearPoints(p) {
   const x=p.x-CAR.rearOffset*Math.cos(p.heading), y=p.y-CAR.rearOffset*Math.sin(p.heading);
   return [-.72,.72].map(offset=>({x:x-offset*Math.sin(p.heading),y:y+offset*Math.cos(p.heading)}));
 }
-function completeParking() {
+async function completeParking() {
   parkedOk=!drag && speed===0 && !blocked(car) && isAtTarget(car,layout);
   if(parkedOk && !successCelebrated){
-    // Never consume the celebration while audio is still suspended.
-    successCelebrated=collisionSound.success();
-    if(!successCelebrated){
-      $('sound-status').hidden=false;
-      $('sound-status').textContent='駐車は成功しましたが、成功音を再生できませんでした。「音をテスト」で確認してください。';
-    }
+    const releasedVersion=gestureVersion;
+    const played=await playEffect('success');
+    if(releasedVersion===gestureVersion)successCelebrated=played;
   }
   updateReadout();
 }
@@ -129,7 +126,7 @@ function update(dt) {
       const candidate=advance(car,speed,wheel,dt/steps);
       if(blocked(candidate)){
         collision=true;
-        if(!contactPosition){collisionSound.buzz();contactPosition={x:car.x,y:car.y};}
+        if(!contactPosition){contactPosition={x:car.x,y:car.y};void playEffect('collision');}
         break;
       }
       car=candidate;
@@ -140,7 +137,9 @@ function update(dt) {
       trace.push(rearPoints(car));lastTrace={...car};if(trace.length>3500)trace.shift();
     }
   }
-  parkedOk=!drag && speed===0 && !collision && isAtTarget(car,layout);
+  // Only a real release judges success in completeParking(). A cancelled
+  // gesture or blur must not show success without requesting its sound.
+  if(drag || speed!==0 || collision || !isAtTarget(car,layout))parkedOk=false;
   updateReadout();
 }
 function updateReadout() {
