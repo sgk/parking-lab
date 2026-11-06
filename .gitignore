@@ -1,0 +1,9 @@
+node_modules/
+.sites-checkout/
+.aws/
+.agents/
+.codex/
+.wrangler/
+.env
+.env.*
+*.tar.gz
