@@ -13,9 +13,9 @@
     <section class="workspace" aria-label="車庫入れ練習">
       <div class="simulation">
         <div class="scene-toolbar"><div class="live-label"><span></span> PRACTICE FIELD</div><div class="segmented" aria-label="視点"><button id="map-mode" aria-pressed="true" class="selected">地図を固定</button><button id="car-mode" aria-pressed="false">車を固定</button></div></div>
-        <canvas id="scene" aria-label="真上から見た駐車場。任意の場所から上下左右にドラッグして運転します。" tabindex="0"></canvas>
+        <canvas id="scene" aria-label="真上から見た駐車場。横位置でハンドル角度を決め、上下にドラッグして運転します。" tabindex="0"></canvas>
         <div class="scene-key"><span class="target-key"></span> 目標の駐車スペース <span class="trail-key"></span> 後輪の軌跡</div>
-        <div class="scene-bottom"><span id="status" role="status" aria-live="polite">好きな場所からドラッグして、スタート</span><button id="reset" class="button reset">↺ <span>最初から</span></button></div>
+        <div class="scene-bottom"><span id="status" role="status" aria-live="polite">好きな場所からドラッグして、スタート</span><div class="scene-actions"><button id="recenter" class="button">車の位置へ</button><button id="reset" class="button reset">↺ <span>最初から</span></button></div></div>
       </div>
       <aside class="dashboard">
         <div class="panel-title">いまの車の状態 <span>LIVE</span></div>
@@ -32,9 +32,9 @@
         <div class="tip"><span>↳</span><div><strong>後輪の動きに注目</strong><p>バックすると、後輪はハンドルを切った側へ。車の前側は反対側へ振れます。</p></div></div>
       </aside>
     </section>
-    <section class="instructions"><div class="instruction-heading"><span>HOW TO PLAY</span><h2>指先で、ゆっくり運転。</h2></div><div class="instruction"><span class="control-icon">↕</span><div><h3>上下にドラッグ</h3><p>上で前進、下で後進。遠くへ動かすほど速く。</p></div></div><div class="instruction"><span class="control-icon">↔</span><div><h3>左右にドラッグ</h3><p>左右の移動量でハンドル操作。斜めで同時操作。</p></div></div><div class="instruction"><span class="control-icon">◎</span><div><h3>離すと、その場で停止</h3><p>ハンドルは角度を保持。タップだけでは動きません。</p></div></div></section>
+    <section class="instructions"><div class="instruction-heading"><span>HOW TO PLAY</span><h2>指先で、ゆっくり運転。</h2></div><div class="instruction"><span class="control-icon">↕</span><div><h3>上下にドラッグ</h3><p>上で前進、下で後進。遠くへ動かすほど速く。</p></div></div><div class="instruction"><span class="control-icon">↔</span><div><h3>横位置でハンドル操作</h3><p>中央線で直進。左右の端で最大角度。</p></div></div><div class="instruction"><span class="control-icon">◎</span><div><h3>離すと、その場で停止</h3><p>ハンドルは角度を保持。タップでは車は動きません。</p></div></div></section>
     <footer><span>焦らず、何度でも。</span><span>学習用の簡易モデルです。実車の運転は指導者のもとで行ってください。</span></footer>
   </main>
-  <dialog id="help-dialog"><form method="dialog"><button class="close button" aria-label="閉じる">×</button><div class="eyebrow">HOW TO PLAY</div><h2>どこからでも、ドラッグ。</h2><p>練習画面の好きな場所を押し、そこから指やマウスを動かします。押した位置自体は操作に影響しません。</p><p><b>上下：</b>上へ動かすと前進、下へ動かすと後進。開始位置に戻すと停止します。</p><p><b>左右：</b>右へ動かすと右回し、左へ動かすと左回し。約100pxでハンドル1.5回転、前輪は最大36°です。</p><p><b>離す：</b>即停止し、ハンドル角度は保持します。次のドラッグでさらに回せます。「ハンドルをまっすぐに」で戻せます。</p><p><b>目標：</b>緑のスペースに車全体を収めます。接触すると止まります。逆方向のドラッグで離れられます。</p><p>速度はドラッグ量に比例し、最大7.2km/h。車を固定すると、車の位置と向きを固定して地図が動きます。</p><button class="button primary">練習をはじめる →</button></form></dialog>
+  <dialog id="help-dialog"><form method="dialog"><button class="close button" aria-label="閉じる">×</button><div class="eyebrow">HOW TO PLAY</div><h2>どこからでも、ドラッグ。</h2><p>練習画面の好きな場所を押し、そこから指やマウスを動かします。横位置がハンドル角度、押した位置からの上下の移動量がアクセルになります。</p><p><b>上下：</b>上へ動かすと前進、下へ動かすと後進。開始位置に戻すと停止します。</p><p><b>左右：</b>練習画面の中央線で直進です。中央から左で左へ、右で右へ切れます。左右の端でハンドル1.5回転、前輪は最大36°です。横位置を押すだけでも角度を変更できます。</p><p><b>離す：</b>即停止し、ハンドル角度は保持します。次に押した横位置で角度が決まります。「ハンドルをまっすぐに」で戻せます。</p><p><b>目標：</b>緑のスペースに車全体を収めます。接触すると止まります。逆方向のドラッグで離れられます。</p><p>拡大表示で車が画面外へ出たら「車の位置へ」で表示を戻せます。速度は上下のドラッグ量に比例し、最大7.2km/h。車を固定すると、車の位置と向きを固定して地図が動きます。</p><button class="button primary">練習をはじめる →</button></form></dialog>
   <script type="module" src="app.js"></script>
 </body></html>

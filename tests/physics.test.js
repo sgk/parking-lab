@@ -2,14 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CAR, advance, corners, overlaps, dragInput } from '../dist/physics.js';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
-test('a tap changes neither velocity nor steering',()=>{
-  const result=dragInput(0,0,2);near(result.speed,0);near(result.wheel,2);
+test('absolute horizontal position controls steering; a tap leaves speed zero',()=>{
+  near(dragInput(200,0,400).wheel,0);
+  near(dragInput(0,0,400).wheel,-CAR.maxWheel);
+  near(dragInput(400,0,400).wheel,CAR.maxWheel);
+  near(dragInput(100,0,400).wheel,-CAR.maxWheel/2);
+  near(dragInput(300,0,400).wheel,CAR.maxWheel/2);
+  near(dragInput(400,0,400).speed,0);
+  near(dragInput(100,0,200).wheel,0);
 });
-test('drag direction, proportional speed, and steering limits',()=>{
-  near(dragInput(0,-50,0).speed,1);near(dragInput(0,50,0).speed,-1);
-  near(dragInput(1000,-1000,0).wheel,3*Math.PI);near(dragInput(-1000,1000,0).wheel,-3*Math.PI);
-  near(dragInput(0,-1000,0).speed,2);near(dragInput(0,1000,0).speed,-2);
-  near(dragInput(10,0,1).wheel,1+.1*CAR.maxWheel);
+test('vertical drag preserves proportional speed, with bounded steering and speed',()=>{
+  near(dragInput(200,-50,400).speed,1);near(dragInput(200,50,400).speed,-1);
+  near(dragInput(1000,-1000,400).wheel,CAR.maxWheel);
+  near(dragInput(-1000,1000,400).wheel,-CAR.maxWheel);
+  near(dragInput(200,-1000,400).speed,2);near(dragInput(200,1000,400).speed,-2);
 });
 test('distance integrates velocity and preserves direction with straight tires',()=>{
   const p={x:0,y:0,heading:0};const q=advance(p,2,0,3);

@@ -4,21 +4,23 @@ const $ = id => document.getElementById(id);
 const canvas = $('scene'), ctx = canvas.getContext('2d');
 const parked = [7, 11, 23, 27].map((x,i) => ({x,y:7,heading:-Math.PI/2,color:['#b7bcb3','#e3d9c6','#a2b3ae','#c3c6b8'][i]}));
 const target = {x:17,y:7,heading:-Math.PI/2};
-const world = {width:34,height:25};
+let mapCenter = {x:24,y:16.8};
 let car, wheel=0, speed=0, drag=null, mode='map', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false;
 function reset() {
   car={x:24,y:16.8,heading:Math.PI};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
+  mapCenter={x:car.x,y:car.y};
   updateReadout();
 }
 function stop() {speed=0;drag=null;}
 function setMode(next) {
-  stop();mode=next;
+  stop();mode=next;mapCenter={x:car.x,y:car.y};
   for(const [id,value] of [['map-mode','map'],['car-mode','car']]) {
     $(id).classList.toggle('selected',value===mode);$(id).setAttribute('aria-pressed',String(value===mode));
   }
 }
 $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car');
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
+$('recenter').onclick=()=>{stop();mapCenter={x:car.x,y:car.y};};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});window.addEventListener('blur',stop);
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
@@ -26,12 +28,15 @@ document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, label, dialog'))return;
   if(drag || (e.pointerType==='mouse' && e.button!==0))return;
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
-  drag={id:e.pointerId,x:e.clientX,y:e.clientY,wheel,dx:0,dy:0};speed=0;
+  drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0};speed=0;
+  const bounds=canvas.getBoundingClientRect();
+  wheel=dragInput(e.clientX-bounds.left,0,bounds.width).wheel;
 });
 document.addEventListener('pointermove',e=>{
   if(!drag || drag.id!==e.pointerId)return;
   drag.dx=e.clientX-drag.x;drag.dy=e.clientY-drag.y;
-  const input=dragInput(drag.dx,drag.dy,drag.wheel);
+  const bounds=canvas.getBoundingClientRect();
+  const input=dragInput(e.clientX-bounds.left,drag.dy,bounds.width);
   wheel=input.wheel;speed=input.speed;
 });
 for(const event of ['pointerup','pointercancel','lostpointercapture']) document.addEventListener(event,e=>{if(drag?.id===e.pointerId)stop();});
@@ -73,7 +78,7 @@ function updateReadout() {
   $('wheel-text').textContent=Math.abs(degrees)<.5?'まっすぐ':`${degrees<0?'左':'右'} ${Math.round(Math.abs(degrees))}°`;
   $('tire-text').textContent=`${Math.round(wheel/CAR.maxWheel*36)}°`;
   $('dash-wheel').setAttribute('transform',`translate(80 61) rotate(${degrees})`);
-  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'スペースに収まりました。何度でも練習できます。':drag?'上下で速度、左右でハンドル。離すと停止します。':'好きな場所からドラッグして、スタート';
+  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'スペースに収まりました。何度でも練習できます。':drag?'中央線で直進。上下にドラッグして前進・後進。':'横位置でハンドル、上下ドラッグでアクセル';
   if($('status').textContent!==text)$('status').textContent=text;
 }
 function rect(x,y,w,h,color,r=0) {
@@ -147,16 +152,22 @@ function render() {
   if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,bounds.width,bounds.height);
   // Leave room for the fixed toolbar and bottom information strip.
-  const scale=Math.min(bounds.width/35,(bounds.height-100)/25);
+  // Fit five car widths across and three car lengths vertically; extra space
+  // on wide screens stays visible without stretching the vehicle.
+  const scale=Math.min(bounds.width/(CAR.width*5),(bounds.height-100)/(CAR.length*3));
   const centerX=bounds.width/2,centerY=57+(bounds.height-115)/2;
   ctx.save();ctx.translate(centerX,centerY);ctx.scale(scale,scale);
   if(mode==='car'){ctx.rotate(-Math.PI/2-car.heading);ctx.translate(-car.x,-car.y);}
-  else ctx.translate(-world.width/2,-world.height/2);
+  else ctx.translate(-mapCenter.x,-mapCenter.y);
   drawMap();
   if($('trail').checked)for(let j=0;j<2;j++)line(trace.map(t=>t[j]),'#7c9f6c88',.045,[.1,.12]);
   if($('guide').checked)drawGuide();
   drawCar(car,'#a2c484',true);
   ctx.restore();
+  ctx.save();ctx.strokeStyle='#426a5480';ctx.lineWidth=1;ctx.setLineDash([6,6]);
+  ctx.beginPath();ctx.moveTo(centerX,60);ctx.lineTo(centerX,bounds.height-93);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#f7f9f0e8';ctx.beginPath();ctx.roundRect(centerX-34,bounds.height-94,68,20,5);ctx.fill();
+  text('直進 · 0°',centerX,bounds.height-84,10,'#55734b');ctx.restore();
   if(drag && Math.hypot(drag.dx,drag.dy)>2) {
     const x=drag.x-bounds.left,y=drag.y-bounds.top;
     ctx.save();ctx.strokeStyle='#547c5599';ctx.fillStyle='#547c5518';ctx.lineWidth=1;ctx.setLineDash([4,4]);

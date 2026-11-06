@@ -28,6 +28,6 @@ export function overlaps(a, b) {
   }
   return true;
 }
-export function dragInput(dx, dy, startWheel, sensitivity=100) {
-  return { wheel: clamp(startWheel + dx / sensitivity * CAR.maxWheel, -CAR.maxWheel, CAR.maxWheel), speed: clamp(-dy / sensitivity, -1, 1) * 2 };
+export function dragInput(x, dy, viewportWidth, sensitivity=100) {
+  return { wheel: clamp((x / viewportWidth - .5) * 2, -1, 1) * CAR.maxWheel, speed: clamp(-dy / sensitivity, -1, 1) * 2 };
 }
