@@ -7,17 +7,17 @@ const canvas = $('scene'), ctx = canvas.getContext('2d');
 const collisionSound = createCollisionSound(window.AudioContext, message => {
   $('sound-status').hidden=false;$('sound-status').textContent=message;
 });
-let contactPosition=null, audioReady=false;
+let contactPosition=null, audioReady=false, gestureVersion=0;
 let layout = createLayout();
 let mapCenter = {x:24,y:16.8};
 let car, wheel=0, speed=0, drag=null, mode='car', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false, successCelebrated=false;
 function reset() {
   car={...layout.start};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
   mapCenter={x:car.x,y:car.y};
-  contactPosition=null;successCelebrated=false;
+  contactPosition=null;successCelebrated=false;gestureVersion++;
   updateReadout();
 }
-function stop() {speed=0;drag=null;}
+function stop() {speed=0;drag=null;gestureVersion++;}
 function setMode(next) {
   stop();mode=next;mapCenter={x:car.x,y:car.y};
   for(const [id,value] of [['map-mode','map'],['car-mode','car']]) {
@@ -34,8 +34,7 @@ async function enableSound() {
   $('sound-test').disabled=false;$('sound-start').disabled=false;$('sound-status').hidden=false;
   if(ready){
     audioReady=true;contactPosition=null;$('sound-gate').hidden=true;
-    collisionSound.success();
-    $('sound-status').textContent='テスト音を再生しました。聞こえない場合はメディア音量・出力先・サイトの音声設定を確認してください。';
+    if(collisionSound.success())$('sound-status').textContent='テスト音を再生しました。聞こえない場合はメディア音量・出力先・サイトの音声設定を確認してください。';
   } else if(!$('sound-status').textContent) {
     $('sound-status').textContent='音声が停止しています。ブラウザの音声設定を確認して再読み込みしてください。';
   }
@@ -76,6 +75,7 @@ canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, label, dialog'))return;
   if(!audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
+  contactPosition=null;gestureVersion++;
   // Mouse activation occurs on down; touch/pen activation occurs on up.
   if(e.pointerType==='mouse')collisionSound.unlock();
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
@@ -90,10 +90,14 @@ document.addEventListener('pointermove',e=>{
   const input=dragInput(e.clientX-bounds.left,drag.dy,bounds.width);
   wheel=input.wheel;speed=input.speed;
 });
-for(const event of ['pointerup','pointercancel','lostpointercapture']) document.addEventListener(event,e=>{
+for(const event of ['pointerup','pointercancel','lostpointercapture']) document.addEventListener(event,async e=>{
   if(drag?.id!==e.pointerId)return;
-  if(event==='pointerup' && e.pointerType!=='mouse')collisionSound.unlock();
   stop();
+  if(event!=='pointerup')return;
+  const releasedVersion=gestureVersion;
+  const ready=await collisionSound.unlock();
+  if(!ready || drag || releasedVersion!==gestureVersion)return;
+  completeParking();
 });
 window.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Escape'){stop();if(e.code==='Space'&&e.target===canvas)e.preventDefault();}});
 
@@ -103,6 +107,18 @@ function blocked(candidate) {
 function rearPoints(p) {
   const x=p.x-CAR.rearOffset*Math.cos(p.heading), y=p.y-CAR.rearOffset*Math.sin(p.heading);
   return [-.72,.72].map(offset=>({x:x-offset*Math.sin(p.heading),y:y+offset*Math.cos(p.heading)}));
+}
+function completeParking() {
+  parkedOk=!drag && speed===0 && !blocked(car) && isAtTarget(car,layout);
+  if(parkedOk && !successCelebrated){
+    // Never consume the celebration while audio is still suspended.
+    successCelebrated=collisionSound.success();
+    if(!successCelebrated){
+      $('sound-status').hidden=false;
+      $('sound-status').textContent='駐車は成功しましたが、成功音を再生できませんでした。「音をテスト」で確認してください。';
+    }
+  }
+  updateReadout();
 }
 function update(dt) {
   collision=false;
@@ -117,7 +133,7 @@ function update(dt) {
         break;
       }
       car=candidate;
-      // Keep the same contact latched through a pause or tiny boundary jitter.
+      // Suppress repeated sounds within one drag, until moving clear.
       if(contactPosition && Math.hypot(car.x-contactPosition.x,car.y-contactPosition.y)>.08)contactPosition=null;
     }
     if(!lastTrace || Math.hypot(car.x-lastTrace.x,car.y-lastTrace.y)>.08) {
@@ -125,7 +141,6 @@ function update(dt) {
     }
   }
   parkedOk=!drag && speed===0 && !collision && isAtTarget(car,layout);
-  if(parkedOk && !successCelebrated){collisionSound.success();successCelebrated=true;}
   updateReadout();
 }
 function updateReadout() {

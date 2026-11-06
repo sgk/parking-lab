@@ -21,9 +21,9 @@ test('audio is initialized by user interaction and the buzz has a bounded envelo
   assert.ok(Math.abs(nodes[0].stopTime-nodes[0].startTime-.36)<1e-8);
   assert.equal(nodes[2].values.at(-1),0);
   nodes[0].onended();assert.ok(nodes.every(node=>node.disconnected));
-  sound.success();
+  assert.equal(sound.success(),true);
   const melody=nodes.slice(3).filter(node=>node.frequency);
-  assert.equal(melody.length,6);assert.ok(melody.every(node=>node.type==='sine'));
+  assert.equal(melody.length,6);assert.ok(melody.every(node=>node.type==='triangle'));
   assert.ok(melody[3].startTime>melody[0].startTime);
   for(const node of melody)node.onended();assert.ok(nodes.every(node=>node.disconnected));
 });
@@ -49,6 +49,6 @@ test('test playback waits until asynchronous audio activation completes',async()
     createOscillator(){oscillators++;throw Error('Unused synthesis in this test');}
   }
   const sound=createCollisionSound(DelayedAudioContext);
-  const ready=sound.unlock();sound.success();assert.equal(oscillators,0);
+  const ready=sound.unlock();assert.equal(sound.success(),false);assert.equal(oscillators,0);
   finishResume();assert.equal(await ready,true);
 });

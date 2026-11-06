@@ -21,22 +21,23 @@ export function createCollisionSound(AudioContextClass, onError = () => {}) {
       } catch { fail(); return false; }
     },
     success() {
-      if (failed || !context || context.state !== 'running') return;
+      if (failed || !context || context.state !== 'running') return false;
       try {
         // A soft ascending C-major arpeggio with a lingering final chord.
         const now=context.currentTime;
         for(const [frequency,delay] of [[523.25,0],[659.25,.13],[783.99,.26],[1046.5,.42],[659.25,.42],[783.99,.42]]) {
           const oscillator=context.createOscillator(),gain=context.createGain();
           const start=now+delay;
-          oscillator.type='sine';oscillator.frequency.setValueAtTime(frequency,start);
-          gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(.065,start+.018);
+          oscillator.type='triangle';oscillator.frequency.setValueAtTime(frequency,start);
+          gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(.1,start+.018);
           gain.gain.exponentialRampToValueAtTime(.001,start+.65);
           gain.gain.linearRampToValueAtTime(0,start+.72);
           oscillator.connect(gain);gain.connect(context.destination);
           oscillator.onended=()=>{oscillator.disconnect();gain.disconnect();};
           oscillator.start(start);oscillator.stop(start+.74);
         }
-      } catch { fail(); }
+        return true;
+      } catch { fail(); return false; }
     },
     buzz() {
       if (failed || !context || context.state !== 'running') return;
