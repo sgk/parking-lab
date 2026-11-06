@@ -7,7 +7,7 @@ const canvas = $('scene'), ctx = canvas.getContext('2d');
 const collisionSound = createCollisionSound(window.AudioContext, message => {
   $('sound-status').hidden=false;$('sound-status').textContent=message;
 });
-let contactPosition=null;
+let contactPosition=null, audioReady=false;
 let layout = createLayout();
 let mapCenter = {x:24,y:16.8};
 let car, wheel=0, speed=0, drag=null, mode='car', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false, successCelebrated=false;
@@ -28,17 +28,20 @@ $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car'
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
 $('recenter').onclick=()=>{stop();mapCenter={x:car.x,y:car.y};};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
-$('sound-test').onclick=async()=>{
-  stop();$('sound-test').disabled=true;
+async function enableSound() {
+  stop();$('sound-test').disabled=true;$('sound-start').disabled=true;
   const ready=await collisionSound.unlock();
-  $('sound-test').disabled=false;$('sound-status').hidden=false;
+  $('sound-test').disabled=false;$('sound-start').disabled=false;$('sound-status').hidden=false;
   if(ready){
+    audioReady=true;contactPosition=null;$('sound-gate').hidden=true;
     collisionSound.success();
     $('sound-status').textContent='テスト音を再生しました。聞こえない場合はメディア音量・出力先・サイトの音声設定を確認してください。';
   } else if(!$('sound-status').textContent) {
     $('sound-status').textContent='音声が停止しています。ブラウザの音声設定を確認して再読み込みしてください。';
   }
-};
+  $('sound-start-status').textContent=ready?'':$('sound-status').textContent;
+}
+$('sound-test').onclick=enableSound;$('sound-start').onclick=enableSound;
 function syncDimensions() {
   for(const key of Object.keys(DEFAULT_LAYOUT)){
     $(key).value=layout[key].toFixed(1);updateDimensionButtons(key);
@@ -72,7 +75,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});w
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, label, dialog'))return;
-  if(drag || (e.pointerType==='mouse' && e.button!==0))return;
+  if(!audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
   // Mouse activation occurs on down; touch/pen activation occurs on up.
   if(e.pointerType==='mouse')collisionSound.unlock();
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
@@ -121,7 +124,7 @@ function update(dt) {
       trace.push(rearPoints(car));lastTrace={...car};if(trace.length>3500)trace.shift();
     }
   }
-  parkedOk=speed===0 && !collision && isAtTarget(car,layout);
+  parkedOk=!drag && speed===0 && !collision && isAtTarget(car,layout);
   if(parkedOk && !successCelebrated){collisionSound.success();successCelebrated=true;}
   updateReadout();
 }

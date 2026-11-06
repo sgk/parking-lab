@@ -14,6 +14,7 @@
       <div class="simulation">
         <div class="scene-toolbar"><div class="live-label"><span></span> PRACTICE FIELD</div><div class="segmented" aria-label="視点"><button id="map-mode" aria-pressed="false">地図を固定</button><button id="car-mode" aria-pressed="true" class="selected">車を固定</button></div></div>
         <canvas id="scene" aria-label="真上から見た駐車場。横位置でハンドル角度を決め、上下にドラッグして運転します。" tabindex="0"></canvas>
+        <div id="sound-gate" class="sound-gate"><div class="sound-start-card"><span class="eyebrow">READY TO PRACTICE</span><h2>音と一緒に、練習しよう。</h2><p>接触音はドラッグ中にすぐ鳴ります。<br>成功の音は、指を離して停めたあとに。</p><button id="sound-start" type="button" class="button primary">♪ 音を有効にして練習</button><p id="sound-start-status" role="status"></p></div></div>
         <div class="scene-key"><span class="target-key"></span> 目標の駐車スペース <span class="trail-key"></span> 後輪の軌跡 <span class="destination-key"></span><span id="target-distance">目的地まで</span></div>
         <div class="scene-bottom"><span id="status" role="status" aria-live="polite">好きな場所からドラッグして、スタート</span><div class="scene-actions"><button id="recenter" class="button">車の位置へ</button><button id="reset" class="button reset">↺ <span>最初から</span></button></div></div>
       </div>
