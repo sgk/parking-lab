@@ -1,14 +1,20 @@
 import { CAR, advance, dragInput } from './physics.js';
 import { DEFAULT_LAYOUT, createLayout, isBlocked, isParked } from './layout.js';
+import { createCollisionSound } from './sound.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene'), ctx = canvas.getContext('2d');
+const collisionSound = createCollisionSound(window.AudioContext, message => {
+  $('sound-status').hidden=false;$('sound-status').textContent=message;
+});
+let contactPosition=null;
 let layout = createLayout();
 let mapCenter = {x:24,y:16.8};
 let car, wheel=0, speed=0, drag=null, mode='map', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false;
 function reset() {
   car={...layout.start};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
   mapCenter={x:car.x,y:car.y};
+  contactPosition=null;
   updateReadout();
 }
 function stop() {speed=0;drag=null;}
@@ -38,6 +44,7 @@ canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, label, dialog'))return;
   if(drag || (e.pointerType==='mouse' && e.button!==0))return;
+  collisionSound.unlock();
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
   drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0};speed=0;
   const bounds=canvas.getBoundingClientRect();
@@ -67,8 +74,14 @@ function update(dt) {
     const steps=Math.max(1,Math.ceil(dt/.008));
     for(let i=0;i<steps;i++) {
       const candidate=advance(car,speed,wheel,dt/steps);
-      if(blocked(candidate)){collision=true;break;}
+      if(blocked(candidate)){
+        collision=true;
+        if(!contactPosition){collisionSound.buzz();contactPosition={x:car.x,y:car.y};}
+        break;
+      }
       car=candidate;
+      // Keep the same contact latched through a pause or tiny boundary jitter.
+      if(contactPosition && Math.hypot(car.x-contactPosition.x,car.y-contactPosition.y)>.08)contactPosition=null;
     }
     if(!lastTrace || Math.hypot(car.x-lastTrace.x,car.y-lastTrace.y)>.08) {
       trace.push(rearPoints(car));lastTrace={...car};if(trace.length>3500)trace.shift();

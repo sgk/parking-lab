@@ -12,7 +12,9 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
     return elements.get(id);
   }
   const document={getElementById:element,addEventListener(k,fn){events[k]=fn;}};
-  const context=vm.createContext({...physics,...layouts,document,window:{addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
+  const soundCalls={unlocks:0,buzzes:0};
+  const createCollisionSound=()=>({unlock(){soundCalls.unlocks++;},buzz(){soundCalls.buzzes++;}});
+  const context=vm.createContext({...physics,...layouts,createCollisionSound,document,window:{addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
   const source=fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
   vm.runInContext(source,context);
   const read=expression=>vm.runInContext(expression,context);
@@ -38,4 +40,14 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
   assert.equal(read('speed'),0);assert.equal(read('trace.length'),0);assert.equal(read('blocked(car)'),false);
   assert.match(element('target-distance').textContent,/目的地まで \d+\.\dm/);
   element('layout-defaults').onclick();assert.equal(read('layout.bayWidth'),layouts.DEFAULT_LAYOUT.bayWidth);
+  assert.equal(soundCalls.unlocks,2);assert.equal(soundCalls.buzzes,0);
+  read('car={x:layout.right-CAR.length/2-.005,y:layout.start.y,heading:0};wheel=0;speed=1;update(.02)');
+  assert.equal(read('collision'),true);assert.equal(soundCalls.buzzes,1);
+  read('update(.02);stop();update(.02);speed=1;update(.02)');
+  assert.equal(soundCalls.buzzes,1,'holding or releasing at the same wall must not repeat sound');
+  read('speed=-1;update(.2)');assert.equal(read('contactPosition'),null);
+  read('speed=1;update(.3)');assert.equal(soundCalls.buzzes,2);
+  element('reset').onclick();assert.equal(read('contactPosition'),null);
+  read('car={x:layout.parked[0].x,y:layout.parked[0].y+CAR.length+.005,heading:-Math.PI/2};wheel=0;speed=1;update(.02)');
+  assert.equal(read('collision'),true);assert.equal(soundCalls.buzzes,3,'parked cars also trigger sound');
 });
