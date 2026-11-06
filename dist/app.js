@@ -1,13 +1,13 @@
-import { CAR, advance, corners, overlaps, dragInput } from './physics.js';
+import { CAR, advance, dragInput } from './physics.js';
+import { DEFAULT_LAYOUT, createLayout, isBlocked, isParked } from './layout.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene'), ctx = canvas.getContext('2d');
-const parked = [7, 11, 23, 27].map((x,i) => ({x,y:7,heading:-Math.PI/2,color:['#b7bcb3','#e3d9c6','#a2b3ae','#c3c6b8'][i]}));
-const target = {x:17,y:7,heading:-Math.PI/2};
+let layout = createLayout();
 let mapCenter = {x:24,y:16.8};
 let car, wheel=0, speed=0, drag=null, mode='map', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false;
 function reset() {
-  car={x:24,y:16.8,heading:Math.PI};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
+  car={...layout.start};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
   mapCenter={x:car.x,y:car.y};
   updateReadout();
 }
@@ -22,6 +22,17 @@ $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car'
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
 $('recenter').onclick=()=>{stop();mapCenter={x:car.x,y:car.y};};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
+function syncDimensions() {
+  for(const key of Object.keys(DEFAULT_LAYOUT))$(key).value=layout[key].toFixed(1);
+}
+$('layout-form').onsubmit=e=>{
+  e.preventDefault();
+  if(!$('layout-form').reportValidity())return;
+  const settings=Object.fromEntries(Object.keys(DEFAULT_LAYOUT).map(key=>[key,Number($(key).value)]));
+  layout=createLayout(settings);reset();syncDimensions();
+};
+$('layout-defaults').onclick=()=>{layout=createLayout();reset();syncDimensions();};
+syncDimensions();
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});window.addEventListener('blur',stop);
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
@@ -43,9 +54,7 @@ for(const event of ['pointerup','pointercancel','lostpointercapture']) document.
 window.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Escape'){stop();if(e.code==='Space'&&e.target===canvas)e.preventDefault();}});
 
 function blocked(candidate) {
-  const shape=corners(candidate);
-  if(shape.some(p=>p.x<2||p.x>32||p.y<3.7||p.y>22))return true;
-  return parked.some(p=>overlaps(shape,corners(p)));
+  return isBlocked(candidate,layout);
 }
 function rearPoints(p) {
   const x=p.x-CAR.rearOffset*Math.cos(p.heading), y=p.y-CAR.rearOffset*Math.sin(p.heading);
@@ -65,7 +74,7 @@ function update(dt) {
       trace.push(rearPoints(car));lastTrace={...car};if(trace.length>3500)trace.shift();
     }
   }
-  parkedOk=corners(car).every(p=>p.x>15.3&&p.x<18.7&&p.y>3.8&&p.y<10.8);
+  parkedOk=isParked(car,layout);
   updateReadout();
 }
 function updateReadout() {
@@ -77,6 +86,7 @@ function updateReadout() {
   const degrees=wheel*180/Math.PI;
   $('wheel-text').textContent=Math.abs(degrees)<.5?'まっすぐ':`${degrees<0?'左':'右'} ${Math.round(Math.abs(degrees))}°`;
   $('tire-text').textContent=`${Math.round(wheel/CAR.maxWheel*36)}°`;
+  $('target-distance').textContent=`目的地まで ${Math.hypot(car.x-layout.target.x,car.y-layout.target.y).toFixed(1)}m`;
   $('dash-wheel').setAttribute('transform',`translate(80 61) rotate(${degrees})`);
   const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'スペースに収まりました。何度でも練習できます。':drag?'中央線で直進。上下にドラッグして前進・後進。':'横位置でハンドル、上下ドラッグでアクセル';
   if($('status').textContent!==text)$('status').textContent=text;
@@ -95,21 +105,32 @@ function tree(x,y,r=1) {
   ctx.shadowBlur=0;ctx.fillStyle='#b5c5a2';ctx.beginPath();ctx.arc(x-r*.23,y-r*.15,r*.64,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 function drawMap() {
+  const {left,right,top,bottom,entrance,bayWidth,bayDepth,aisleWidth,target,bays,parked}=layout;
   rect(-100,-100,200,200,'#e9ede3');
   ctx.strokeStyle='#e1e6d9';ctx.lineWidth=.025;
   ctx.beginPath();for(let x=-10;x<45;x++){ctx.moveTo(x,-10);ctx.lineTo(x,40);}for(let y=-10;y<40;y++){ctx.moveTo(-10,y);ctx.lineTo(45,y);}ctx.stroke();
-  rect(1.5,3.2,31,19.3,'#d6ddce',.45);rect(2,3.7,30,18.3,'#f1f2e9',.25);
-  rect(2.25,4,29.5,7.2,'#e9ede2',.1);
-  rect(15.3,3.8,3.4,7,'#d9e5cf',.1);
-  ctx.strokeStyle='#91ad7d';ctx.lineWidth=.065;ctx.setLineDash([.23,.18]);ctx.strokeRect(15.3,3.8,3.4,7);ctx.setLineDash([]);
-  for(const x of [5,9,13,15.3,18.7,21,25,29])line([{x,y:4.15},{x,y:10.8}], '#fffefa', .07);
-  for(const x of [7,11,17,23,27]){rect(x-.52,4.25,1.04,.16,'#c3cbb9',.04);text(x===17?'P':String(x<17?'0'+(x===7?1:2):'0'+(x===23?4:5)),x,11.65,.35,x===17?'#739365':'#a6b19c');}
-  text('P',17,7,.9,'#91ad7d');text('ここに駐車',17,8.3,.32,'#85a173');
-  line([{x:3,y:16.1},{x:31,y:16.1}],'#dfe4d7',.055,[.5,.5]);
-  for(const x of [7,27]) {line([{x:x+.7,y:19},{x:x-.7,y:19}],'#c6cfbc',.08);line([{x:x-.2,y:18.65},{x:x-.7,y:19},{x:x-.2,y:19.35}],'#c6cfbc',.08);}
-  text('PARKING LAB',17,21.1,.26,'#abb6a0');
-  for(const x of [3.5,10,24,30.5])tree(x,1.75,.8);
-  for(const x of [5,12,22,29])tree(x,24,.8);
+  rect(left-.5,top-.5,right-left+1,bottom-top+1,'#d6ddce',.45);rect(left,top,right-left,bottom-top,'#f1f2e9',.25);
+  rect(left+.1,top+.1,right-left-.2,bayDepth-.1,'#e9ede2',.1);
+  rect(target.x-bayWidth/2,top,bayWidth,bayDepth,'#d9e5cf',.1);
+  for(let i=0;i<=5;i++) {
+    const x=target.x-bayWidth*2.5+i*bayWidth;
+    line([{x,y:top},{x,y:entrance}],'#fffefa',.07);
+  }
+  line([{x:target.x-bayWidth*2.5,y:top},{x:target.x+bayWidth*2.5,y:top}],'#fffefa',.07);
+  ctx.strokeStyle='#91ad7d';ctx.lineWidth=.065;ctx.setLineDash([.23,.18]);ctx.strokeRect(target.x-bayWidth/2,top,bayWidth,bayDepth);ctx.setLineDash([]);
+  bays.forEach((bay,i)=>{
+    rect(bay.x-.52,top+.45,1.04,.16,'#c3cbb9',.04);
+    text(i===2?'P':`0${i+1}`,bay.x,entrance+.55,.35,i===2?'#739365':'#a6b19c');
+  });
+  text('P',target.x,target.y,.9,'#91ad7d');text('ここに駐車',target.x,target.y+1.1,.32,'#85a173');
+  const aisleCenter=entrance+aisleWidth/2;
+  line([{x:left+1,y:aisleCenter},{x:right-1,y:aisleCenter}],'#dfe4d7',.055,[.5,.5]);
+  for(const x of [left+2,right-2]) {
+    const y=entrance+aisleWidth*.75;
+    line([{x:x+.7,y},{x:x-.7,y}],'#c6cfbc',.08);line([{x:x-.2,y:y-.35},{x:x-.7,y},{x:x-.2,y:y+.35}],'#c6cfbc',.08);
+  }
+  text('PARKING LAB',target.x,bottom-.55,.26,'#abb6a0');
+  for(const x of [left+1,left+(right-left)/3,right-(right-left)/3,right-1]) {tree(x,top-2,.8);tree(x,bottom+2,.8);}
   for(const p of parked)drawCar(p,p.color,false);
 }
 function drawCar(p,color,active) {
@@ -163,6 +184,13 @@ function render() {
   if($('trail').checked)for(let j=0;j<2;j++)line(trace.map(t=>t[j]),'#7c9f6c88',.045,[.1,.12]);
   if($('guide').checked)drawGuide();
   drawCar(car,'#a2c484',true);
+  // Both endpoints are world-space centers, so the line remains attached
+  // in the fixed-map and fixed-car camera modes.
+  line([car,layout.target],'#fffaf1cc',.15);
+  line([car,layout.target],'#d2763f',.075);
+  for(const p of [car,layout.target]) {
+    ctx.beginPath();ctx.arc(p.x,p.y,.1,0,Math.PI*2);ctx.fillStyle='#d2763f';ctx.fill();
+  }
   ctx.restore();
   ctx.save();ctx.strokeStyle='#426a5480';ctx.lineWidth=1;ctx.setLineDash([6,6]);
   ctx.beginPath();ctx.moveTo(centerX,60);ctx.lineTo(centerX,bounds.height-93);ctx.stroke();ctx.setLineDash([]);

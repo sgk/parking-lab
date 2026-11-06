@@ -3,16 +3,17 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import * as physics from '../dist/physics.js';
+import * as layouts from '../dist/layout.js';
 
 test('pointer controls stop on release, preserve steering, ignore buttons, and switch cameras',()=>{
   const elements=new Map(),events={},windowEvents={};
   function element(id) {
-    if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},addEventListener(){},setPointerCapture(){},getContext(){return {};},getBoundingClientRect(){return {left:20,width:400};}});
+    if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},addEventListener(){},setPointerCapture(){},reportValidity(){return true;},getContext(){return {};},getBoundingClientRect(){return {left:20,width:400};}});
     return elements.get(id);
   }
   const document={getElementById:element,addEventListener(k,fn){events[k]=fn;}};
-  const context=vm.createContext({...physics,document,window:{addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
-  const source=fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/,'');
+  const context=vm.createContext({...physics,...layouts,document,window:{addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
+  const source=fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
   vm.runInContext(source,context);
   const read=expression=>vm.runInContext(expression,context);
   const pointer=(x,y,control=false)=>({clientX:x,clientY:y,pointerId:1,pointerType:'touch',target:{closest:()=>control?{}:null},preventDefault(){}});
@@ -29,5 +30,12 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
   element('recenter').onclick();assert.equal(read('mapCenter.x'),read('car.x'));
   element('car-mode').onclick();assert.equal(read('mode'),'car');assert.equal(element('car-mode').attributes['aria-pressed'],'true');
   element('center').onclick();assert.equal(read('wheel'),0);
-  element('reset').onclick();assert.equal(read('car.x'),24);assert.equal(read('trace.length'),0);
+  element('reset').onclick();assert.equal(read('car.x'),read('layout.start.x'));assert.equal(read('trace.length'),0);
+  element('bayWidth').value='2.5';element('bayDepth').value='5';element('aisleWidth').value='4';
+  read('speed=1;trace.push([])');
+  element('layout-form').onsubmit({preventDefault(){}});
+  assert.equal(read('layout.bayWidth'),2.5);assert.equal(read('layout.bayDepth'),5);assert.equal(read('layout.aisleWidth'),4);
+  assert.equal(read('speed'),0);assert.equal(read('trace.length'),0);assert.equal(read('blocked(car)'),false);
+  assert.match(element('target-distance').textContent,/目的地まで \d+\.\dm/);
+  element('layout-defaults').onclick();assert.equal(read('layout.bayWidth'),layouts.DEFAULT_LAYOUT.bayWidth);
 });
