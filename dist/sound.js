@@ -1,21 +1,24 @@
 // Use one Web Audio implementation; initialize only during a user gesture.
 export function createCollisionSound(AudioContextClass, onError = () => {}) {
-  let context = null, failed = false, resuming = false;
+  let context = null, failed = false, resuming = null;
   function fail() {
     if (!failed) onError('効果音を再生できません。ブラウザの音声設定を確認して再読み込みしてください。');
     failed = true;
   }
   return {
-    unlock() {
-      if (failed) return;
+    async unlock() {
+      if (failed) return false;
       try {
-        if (!AudioContextClass) { fail(); return; }
+        if (!AudioContextClass) { fail(); return false; }
         if (!context) context = new AudioContextClass();
-        if (context.state === 'suspended' && !resuming) {
-          resuming = true;
-          context.resume().then(() => { resuming = false; }, fail);
+        if (context.state === 'closed') { fail(); return false; }
+        if (context.state !== 'running') {
+          if (!resuming) resuming = context.resume();
+          await resuming;
+          resuming = null;
         }
-      } catch { fail(); }
+        return context.state === 'running';
+      } catch { fail(); return false; }
     },
     success() {
       if (failed || !context || context.state !== 'running') return;

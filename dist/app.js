@@ -28,6 +28,17 @@ $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car'
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
 $('recenter').onclick=()=>{stop();mapCenter={x:car.x,y:car.y};};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
+$('sound-test').onclick=async()=>{
+  stop();$('sound-test').disabled=true;
+  const ready=await collisionSound.unlock();
+  $('sound-test').disabled=false;$('sound-status').hidden=false;
+  if(ready){
+    collisionSound.success();
+    $('sound-status').textContent='テスト音を再生しました。聞こえない場合はメディア音量・出力先・サイトの音声設定を確認してください。';
+  } else if(!$('sound-status').textContent) {
+    $('sound-status').textContent='音声が停止しています。ブラウザの音声設定を確認して再読み込みしてください。';
+  }
+};
 function syncDimensions() {
   for(const key of Object.keys(DEFAULT_LAYOUT)){
     $(key).value=layout[key].toFixed(1);updateDimensionButtons(key);
@@ -62,7 +73,8 @@ canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, label, dialog'))return;
   if(drag || (e.pointerType==='mouse' && e.button!==0))return;
-  collisionSound.unlock();
+  // Mouse activation occurs on down; touch/pen activation occurs on up.
+  if(e.pointerType==='mouse')collisionSound.unlock();
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
   drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0};speed=0;
   const bounds=canvas.getBoundingClientRect();
@@ -75,7 +87,11 @@ document.addEventListener('pointermove',e=>{
   const input=dragInput(e.clientX-bounds.left,drag.dy,bounds.width);
   wheel=input.wheel;speed=input.speed;
 });
-for(const event of ['pointerup','pointercancel','lostpointercapture']) document.addEventListener(event,e=>{if(drag?.id===e.pointerId)stop();});
+for(const event of ['pointerup','pointercancel','lostpointercapture']) document.addEventListener(event,e=>{
+  if(drag?.id!==e.pointerId)return;
+  if(event==='pointerup' && e.pointerType!=='mouse')collisionSound.unlock();
+  stop();
+});
 window.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Escape'){stop();if(e.code==='Space'&&e.target===canvas)e.preventDefault();}});
 
 function blocked(candidate) {

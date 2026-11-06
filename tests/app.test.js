@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import * as physics from '../dist/physics.js';
 import * as layouts from '../dist/layout.js';
 
-test('pointer controls stop on release, preserve steering, ignore buttons, and switch cameras',()=>{
+test('pointer controls stop on release, preserve steering, ignore buttons, and switch cameras',async()=>{
   const elements=new Map(),events={},windowEvents={};
   function element(id) {
     if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},addEventListener(){},setPointerCapture(){},reportValidity(){return true;},getContext(){return {};},getBoundingClientRect(){return {left:20,width:400};}});
@@ -13,7 +13,7 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
   }
   const document={getElementById:element,addEventListener(k,fn){events[k]=fn;}};
   const soundCalls={unlocks:0,buzzes:0,successes:0};
-  const createCollisionSound=()=>({unlock(){soundCalls.unlocks++;},buzz(){soundCalls.buzzes++;},success(){soundCalls.successes++;}});
+  const createCollisionSound=()=>({unlock(){soundCalls.unlocks++;return Promise.resolve(true);},buzz(){soundCalls.buzzes++;},success(){soundCalls.successes++;}});
   const context=vm.createContext({...physics,...layouts,createCollisionSound,document,window:{addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
   const source=fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
   vm.runInContext(source,context);
@@ -27,10 +27,12 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
   element('layout-defaults').onclick();
   const pointer=(x,y,control=false)=>({clientX:x,clientY:y,pointerId:1,pointerType:'touch',target:{closest:()=>control?{}:null},preventDefault(){}});
   events.pointerdown(pointer(220,200));
+  assert.equal(soundCalls.unlocks,0,'touch audio must wait for a release gesture');
   assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
   events.pointermove(pointer(320,150));
   assert.equal(read('speed'),1);assert.equal(read('wheel'),1.5*Math.PI);
   events.pointerup(pointer(320,150));
+  assert.equal(soundCalls.unlocks,1);
   assert.equal(read('speed'),0);assert.equal(read('wheel'),1.5*Math.PI);
   events.pointerdown(pointer(50,50));assert.equal(read('speed'),0);assert.ok(read('wheel')<0);events.pointermove(pointer(50,100));
   assert.equal(read('speed'),-1);assert.ok(Math.abs(read('wheel')+.85*3*Math.PI)<1e-8);
@@ -47,7 +49,7 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
   assert.equal(read('speed'),0);assert.equal(read('trace.length'),0);assert.equal(read('blocked(car)'),false);
   assert.match(element('target-distance').textContent,/目的地まで \d+\.\dm/);
   element('layout-defaults').onclick();assert.equal(read('layout.bayWidth'),layouts.DEFAULT_LAYOUT.bayWidth);
-  assert.equal(soundCalls.unlocks,2);assert.equal(soundCalls.buzzes,0);
+  assert.equal(soundCalls.unlocks,1,'blur is not a trusted audio activation gesture');assert.equal(soundCalls.buzzes,0);
   read('car={x:layout.right-CAR.length/2-.005,y:layout.start.y,heading:0};wheel=0;speed=1;update(.02)');
   assert.equal(read('collision'),true);assert.equal(soundCalls.buzzes,1);
   read('update(.02);stop();update(.02);speed=1;update(.02)');
@@ -62,4 +64,9 @@ test('pointer controls stop on release, preserve steering, ignore buttons, and s
   read('update(.02);update(.02)');assert.equal(soundCalls.successes,1,'success is celebrated once per practice');
   read('car={...layout.start};update(.02);car={...layout.target};update(.02)');assert.equal(soundCalls.successes,1);
   element('reset').onclick();read('car={...layout.target};update(.02)');assert.equal(soundCalls.successes,2,'reset starts a new practice');
+  await element('sound-test').onclick();assert.equal(soundCalls.successes,3);assert.equal(element('sound-status').hidden,false);
+  assert.match(element('sound-status').textContent,/テスト音/);assert.equal(element('sound-test').disabled,false);
+  const mouse={...pointer(220,200),pointerType:'mouse',button:0};
+  const previous=soundCalls.unlocks;events.pointerdown(mouse);assert.equal(soundCalls.unlocks,previous+1);
+  events.pointerup(mouse);assert.equal(soundCalls.unlocks,previous+1,'mouse audio activation uses down only');
 });

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCollisionSound } from '../dist/sound.js';
 
-test('audio is initialized by user interaction and the buzz has a bounded envelope and cleanup',()=>{
+test('audio is initialized by user interaction and the buzz has a bounded envelope and cleanup',async()=>{
   let instances=0,resumes=0;const nodes=[];
   class FakeAudioContext {
     constructor(){instances++;this.state='suspended';this.currentTime=10;this.destination={};}
@@ -16,7 +16,7 @@ test('audio is initialized by user interaction and the buzz has a bounded envelo
   }
   const sound=createCollisionSound(FakeAudioContext);
   sound.buzz();assert.equal(instances,0);
-  sound.unlock();sound.unlock();assert.equal(instances,1);assert.equal(resumes,1);
+  assert.equal(await sound.unlock(),true);assert.equal(await sound.unlock(),true);assert.equal(instances,1);assert.equal(resumes,1);
   sound.buzz();assert.equal(nodes[0].type,'square');
   assert.ok(Math.abs(nodes[0].stopTime-nodes[0].startTime-.36)<1e-8);
   assert.equal(nodes[2].values.at(-1),0);
@@ -37,6 +37,18 @@ test('unavailable or blocked audio reports one error and stops retrying',async()
     resume(){return Promise.reject(new Error('Audio blocked'));}
   }
   const denied=createCollisionSound(RefusedAudioContext,()=>errors++);
-  denied.unlock();await Promise.resolve();denied.unlock();denied.buzz();
+  assert.equal(await denied.unlock(),false);assert.equal(await denied.unlock(),false);denied.buzz();
   assert.equal(attempts,1);assert.equal(errors,2);
+});
+
+test('test playback waits until asynchronous audio activation completes',async()=>{
+  let finishResume,oscillators=0;
+  class DelayedAudioContext {
+    constructor(){this.state='suspended';}
+    resume(){return new Promise(resolve=>{finishResume=()=>{this.state='running';resolve();};});}
+    createOscillator(){oscillators++;throw Error('Unused synthesis in this test');}
+  }
+  const sound=createCollisionSound(DelayedAudioContext);
+  const ready=sound.unlock();sound.success();assert.equal(oscillators,0);
+  finishResume();assert.equal(await ready,true);
 });
