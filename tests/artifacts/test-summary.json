@@ -1,0 +1,86 @@
+{
+  "browser": "Chrome/156.0.8078.47",
+  "platform": "Linux headless Chrome; desktop mouse and Chrome touch emulation",
+  "live_site": "https://parking-lab-sgk-20261106.playfuldart.chatgpt.site",
+  "recorded_game_cases": 8,
+  "recorded_game_cases_with_non_silent_audio": 8,
+  "unrecorded_game_cases": 8,
+  "unrecorded_game_cases_with_fresh_generated_audio": 8,
+  "connected_android_devices": 0,
+  "android_device_enumeration": "Installed Windows Android SDK adb devices -l succeeded; no connected devices",
+  "windows_ui_automation": "Unavailable: Node runtime not found",
+  "separate_experiment": "Force-freezing a tab caused touch input to time out; excluded from passed audio cases; details in browser-qa-freeze-experiment.json",
+  "limits": [
+    "No Android hardware test",
+    "No physical speaker or microphone-loopback measurement",
+    "Success pose established using browser debugger to isolate sound integration",
+    "Original intermittent silence not reproduced in Linux Chrome"
+  ],
+  "app_source_changed": false,
+  "audio_analysis": [
+    {
+      "file": "mouse-drive-into-wall.webm",
+      "seconds": 0.54,
+      "peak": 0.28101,
+      "rms": 0.16838,
+      "active_seconds": 0.5,
+      "non_silent": true
+    },
+    {
+      "file": "mouse-parking-success.webm",
+      "seconds": 1.2,
+      "peak": 0.30898,
+      "rms": 0.04757,
+      "active_seconds": 1.1,
+      "non_silent": true
+    },
+    {
+      "file": "mouse-repeat-same-wall.webm",
+      "seconds": 0.54,
+      "peak": 0.28101,
+      "rms": 0.16838,
+      "active_seconds": 0.5,
+      "non_silent": true
+    },
+    {
+      "file": "mouse-suspended-audio-wall.webm",
+      "seconds": 0.54,
+      "peak": 0.28101,
+      "rms": 0.16838,
+      "active_seconds": 0.5,
+      "non_silent": true
+    },
+    {
+      "file": "touch-drive-into-wall.webm",
+      "seconds": 0.54,
+      "peak": 0.28101,
+      "rms": 0.16838,
+      "active_seconds": 0.5,
+      "non_silent": true
+    },
+    {
+      "file": "touch-parking-success.webm",
+      "seconds": 1.2,
+      "peak": 0.30898,
+      "rms": 0.04757,
+      "active_seconds": 1.1,
+      "non_silent": true
+    },
+    {
+      "file": "touch-repeat-same-wall.webm",
+      "seconds": 0.48,
+      "peak": 0.28098,
+      "rms": 0.17778,
+      "active_seconds": 0.46,
+      "non_silent": true
+    },
+    {
+      "file": "touch-suspended-audio-wall.webm",
+      "seconds": 0.54,
+      "peak": 0.28101,
+      "rms": 0.16838,
+      "active_seconds": 0.5,
+      "non_silent": true
+    }
+  ]
+}

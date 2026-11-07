@@ -1,0 +1,173 @@
+{
+  "site": "https://parking-lab-sgk-20261106.playfuldart.chatgpt.site",
+  "started": "2026-11-06T13:40:56.789Z",
+  "scope": "Real Linux Chrome, desktop and emulated touch. Records Web Audio output; does not verify Android hardware or physical speakers.",
+  "cases": [
+    {
+      "input": "mouse",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 0.313469387755102,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "drive-into-wall",
+      "file": "mouse-drive-into-wall.webm",
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 10.344489795918367,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "repeat-same-wall",
+      "file": "mouse-repeat-same-wall.webm",
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 11.853786848072563,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "suspended-audio-wall",
+      "file": "mouse-suspended-audio-wall.webm",
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 13.351473922902494,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "parking-success",
+      "file": "mouse-parking-success.webm",
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 15.27873015873016,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 1.5209070294784581,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "drive-into-wall",
+      "file": "touch-drive-into-wall.webm",
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 11.598367346938776,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "repeat-same-wall",
+      "file": "touch-repeat-same-wall.webm",
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 13.200544217687074,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "suspended-audio-wall",
+      "file": "touch-suspended-audio-wall.webm",
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 14.767891156462586,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "parking-success",
+      "file": "touch-parking-success.webm",
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [
+        {
+          "state": "running",
+          "time": 16.764807256235827,
+          "sampleRate": 44100
+        }
+      ],
+      "gate": true
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.47",
+    "revision": "@1d17a2e2ee147bb7d6ae2ab6abdb3a2510c17775",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.19"
+  },
+  "finished": "2026-11-06T13:41:35.289Z"
+}

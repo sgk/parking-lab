@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CAR } from '../dist/physics.js';
-import { createLayout, DEFAULT_LAYOUT, DIMENSION_LIMITS, isBlocked, isParked, isAtTarget } from '../dist/layout.js';
+import { createLayout, DEFAULT_LAYOUT, DIMENSION_LIMITS, SCENARIOS, isBlocked, isParked, isAtTarget } from '../dist/layout.js';
 
 test('all combinations of dimension extremes have safe starting and parking positions',()=>{
   for(const bayWidth of DIMENSION_LIMITS.bayWidth)for(const bayDepth of DIMENSION_LIMITS.bayDepth)for(const aisleWidth of DIMENSION_LIMITS.aisleWidth){
@@ -43,4 +43,32 @@ test('success requires close center alignment and a nearly parallel heading',()=
   for(const bayWidth of DIMENSION_LIMITS.bayWidth)for(const bayDepth of DIMENSION_LIMITS.bayDepth){
     const variant=createLayout({...DEFAULT_LAYOUT,bayWidth,bayDepth});assert.equal(isAtTarget(variant.target,variant),true);
   }
+});
+
+test('all scenarios and dimension extremes have safe starts and valid target poses',()=>{
+  for(const scenario of SCENARIOS)for(const bayWidth of DIMENSION_LIMITS.bayWidth)for(const bayDepth of DIMENSION_LIMITS.bayDepth)for(const aisleWidth of DIMENSION_LIMITS.aisleWidth){
+    const layout=createLayout({bayWidth,bayDepth,aisleWidth},scenario.id);
+    assert.equal(isBlocked(layout.start,layout),false,`${scenario.id}: initial position intersects a wall or parked car`);
+    assert.equal(isBlocked(layout.target,layout),false,`${scenario.id}: target intersects an obstacle`);
+    assert.equal(isAtTarget(layout.target,layout),true,`${scenario.id}: target must be achievable`);
+    assert.equal(isAtTarget({...layout.target,heading:layout.target.heading+Math.PI},layout),!layout.directed,`${scenario.id}: required heading must be enforced`);
+    assert.equal(layout.bays.filter(bay=>bay.isTarget).length,1);
+  }
+});
+
+test('scenario geometry represents parallel bays, end walls, opposing rows and angled spaces',()=>{
+  const parallel=createLayout(SCENARIOS.find(s=>s.id==='parallel-left').defaults,'parallel-left');
+  assert.equal(parallel.bays.length,3);assert.equal(parallel.parked.length,2);
+  assert.equal(parallel.target.heading,0);
+  assert.equal(isParked({...parallel.target,x:parallel.target.x+.2},parallel),true);
+  const left=createLayout(DEFAULT_LAYOUT,'dead-end-left'),right=createLayout(DEFAULT_LAYOUT,'dead-end-right');
+  assert.equal(left.targetIndex,0);assert.equal(right.targetIndex,4);
+  assert.ok(Math.abs(left.target.x-left.bayWidth/2-left.left-.3)<1e-8);
+  assert.ok(Math.abs(right.right-right.target.x-right.bayWidth/2-.3)<1e-8);
+  const opposing=createLayout(DEFAULT_LAYOUT,'opposing');
+  assert.equal(opposing.parked.length,9);assert.equal(opposing.bays.filter(bay=>bay.row===1).length,5);
+  assert.equal(isBlocked(opposing.parked.at(-1),opposing),true);
+  const angled=createLayout(DEFAULT_LAYOUT,'angled');
+  assert.equal(angled.target.heading,-Math.PI/3);assert.equal(isAtTarget(angled.target,angled),true);
+  assert.throws(()=>createLayout(DEFAULT_LAYOUT,'missing'),RangeError);
 });

@@ -1,0 +1,66 @@
+[
+  {
+    "file": "mouse-drive-into-wall.webm",
+    "seconds": 0.54,
+    "peak": 0.28101,
+    "rms": 0.16838,
+    "active_seconds": 0.5,
+    "non_silent": true
+  },
+  {
+    "file": "mouse-parking-success.webm",
+    "seconds": 1.2,
+    "peak": 0.30898,
+    "rms": 0.04757,
+    "active_seconds": 1.1,
+    "non_silent": true
+  },
+  {
+    "file": "mouse-repeat-same-wall.webm",
+    "seconds": 0.54,
+    "peak": 0.28101,
+    "rms": 0.16838,
+    "active_seconds": 0.5,
+    "non_silent": true
+  },
+  {
+    "file": "mouse-suspended-audio-wall.webm",
+    "seconds": 0.54,
+    "peak": 0.28101,
+    "rms": 0.16838,
+    "active_seconds": 0.5,
+    "non_silent": true
+  },
+  {
+    "file": "touch-drive-into-wall.webm",
+    "seconds": 0.54,
+    "peak": 0.28101,
+    "rms": 0.16838,
+    "active_seconds": 0.5,
+    "non_silent": true
+  },
+  {
+    "file": "touch-parking-success.webm",
+    "seconds": 1.2,
+    "peak": 0.30898,
+    "rms": 0.04757,
+    "active_seconds": 1.1,
+    "non_silent": true
+  },
+  {
+    "file": "touch-repeat-same-wall.webm",
+    "seconds": 0.48,
+    "peak": 0.28098,
+    "rms": 0.17778,
+    "active_seconds": 0.46,
+    "non_silent": true
+  },
+  {
+    "file": "touch-suspended-audio-wall.webm",
+    "seconds": 0.54,
+    "peak": 0.28101,
+    "rms": 0.16838,
+    "active_seconds": 0.5,
+    "non_silent": true
+  }
+]

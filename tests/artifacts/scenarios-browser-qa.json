@@ -1,0 +1,754 @@
+{
+  "site": "http://127.0.0.1:4173",
+  "recording": false,
+  "started": "2026-11-07T01:32:22.650Z",
+  "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
+  "cases": [
+    {
+      "input": "mouse",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "standard",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "standard",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": false,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "standard",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "standard",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": false,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "reverse",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "reverse",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "reverse",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "reverse",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "forward",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "forward",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "forward",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "forward",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "parallel-left",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "parallel-left",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 0
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "parallel-left",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "parallel-left",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 0
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "parallel-right",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "parallel-right",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 3.141592653589793
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "parallel-right",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "parallel-right",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 3.141592653589793
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "dead-end-left",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "dead-end-left",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "dead-end-left",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "dead-end-left",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "dead-end-right",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "dead-end-right",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "dead-end-right",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "dead-end-right",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "narrow",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "narrow",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "narrow",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "narrow",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "opposing",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "opposing",
+        "safeStart": true,
+        "parkedCars": 9,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "opposing",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "opposing",
+        "safeStart": true,
+        "parkedCars": 9,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "angled",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "angled",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.0471975511965976
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "angled",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "angled",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.0471975511965976
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "standard",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "standard",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": false,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "standard",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "standard",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": false,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "reverse",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "reverse",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "reverse",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "reverse",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "forward",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "forward",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "forward",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "forward",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "parallel-left",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "parallel-left",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 0
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "parallel-left",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "parallel-left",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 0
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "parallel-right",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "parallel-right",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 3.141592653589793
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "parallel-right",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "parallel-right",
+        "safeStart": true,
+        "parkedCars": 2,
+        "directed": true,
+        "goalHeading": 3.141592653589793
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "dead-end-left",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "dead-end-left",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "dead-end-left",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "dead-end-left",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "dead-end-right",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "dead-end-right",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "dead-end-right",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "dead-end-right",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "narrow",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "narrow",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "narrow",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "narrow",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "opposing",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "opposing",
+        "safeStart": true,
+        "parkedCars": 9,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "opposing",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "opposing",
+        "safeStart": true,
+        "parkedCars": 9,
+        "directed": true,
+        "goalHeading": 1.5707963267948966
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "angled",
+      "wrongDirection": true,
+      "geometry": {
+        "id": "angled",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.0471975511965976
+      },
+      "status": "車の前向きを、点線枠の矢印に合わせましょう。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "angled",
+      "wrongDirection": false,
+      "geometry": {
+        "id": "angled",
+        "safeStart": true,
+        "parkedCars": 4,
+        "directed": true,
+        "goalHeading": -1.0471975511965976
+      },
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true,
+      "passed": true
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.47",
+    "revision": "@1d17a2e2ee147bb7d6ae2ab6abdb3a2510c17775",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.19"
+  },
+  "finished": "2026-11-07T01:32:44.097Z"
+}

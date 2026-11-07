@@ -1,5 +1,5 @@
-import { CAR, advance, dragInput } from './physics.js';
-import { DEFAULT_LAYOUT, DIMENSION_LIMITS, createLayout, isBlocked, isAtTarget } from './layout.js';
+import { CAR, advance, corners, dragInput } from './physics.js';
+import { DEFAULT_LAYOUT, DIMENSION_LIMITS, SCENARIOS, getScenario, createLayout, isBlocked, isParked, isAtTarget, targetAlignment } from './layout.js?v=scenarios-1';
 import { createCollisionSound } from './sound.js?v=signal-1';
 
 const $ = id => document.getElementById(id);
@@ -15,24 +15,43 @@ const collisionSound = createCollisionSound(window.AudioContext, message => {
 });
 let contactPosition=null, audioReady=false, gestureVersion=0;
 let layout = createLayout();
-let mapCenter = {x:24,y:16.8};
+let mapCenter = {x:24,y:16.8}, overview=false;
 let car, wheel=0, speed=0, drag=null, mode='car', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false, successCelebrated=false;
 function reset() {
   car={...layout.start};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
   mapCenter={x:car.x,y:car.y};
   contactPosition=null;successCelebrated=false;gestureVersion++;
-  updateReadout();
+  syncScenario();updateReadout();
 }
 function stop() {speed=0;drag=null;gestureVersion++;}
 function setMode(next) {
-  stop();mode=next;mapCenter={x:car.x,y:car.y};
+  stop();mode=next;overview=false;mapCenter={x:car.x,y:car.y};
   for(const [id,value] of [['map-mode','map'],['car-mode','car']]) {
     $(id).classList.toggle('selected',value===mode);$(id).setAttribute('aria-pressed',String(value===mode));
   }
+  syncScenario();
 }
+function syncScenario() {
+  const scenario=layout.scenario;
+  $('scenario-select').value=scenario.id;$('scenario-title').textContent=scenario.title;
+  $('scenario-description').textContent=scenario.description;
+  $('scenario-category').textContent=scenario.category;
+  $('scenario-rule').textContent=({either:'前向き・バック自由',reverse:'バック駐車指定',forward:'前向き駐車指定',aligned:'進行方向と同じ向き'})[scenario.rule];
+  $('practice-name').textContent=scenario.title;$('practice-number').textContent=String(SCENARIOS.indexOf(scenario)+1).padStart(2,'0');
+  $('bayDepth-label').textContent=scenario.kind==='parallel'?'縦列枠の長さ':'駐車ロットの奥行き';
+  $('overview').textContent=overview?'全体図を閉じる':'全体図を見る';$('overview').setAttribute('aria-pressed',String(overview));
+}
+function changeScenario(id) {
+  const scenario=getScenario(id);layout=createLayout({...scenario.defaults},id);reset();syncDimensions();
+}
+$('scenario-select').innerHTML=SCENARIOS.map(scenario=>`<option value="${scenario.id}">${scenario.title}</option>`).join('');
+$('scenario-select').onchange=()=>changeScenario($('scenario-select').value);
+$('scenario-prev').onclick=()=>changeScenario(SCENARIOS[(SCENARIOS.indexOf(layout.scenario)+SCENARIOS.length-1)%SCENARIOS.length].id);
+$('scenario-next').onclick=()=>changeScenario(SCENARIOS[(SCENARIOS.indexOf(layout.scenario)+1)%SCENARIOS.length].id);
+$('overview').onclick=()=>{stop();overview=!overview;syncScenario();};
 $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car');
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
-$('recenter').onclick=()=>{stop();mapCenter={x:car.x,y:car.y};};
+$('recenter').onclick=()=>{stop();overview=false;mapCenter={x:car.x,y:car.y};syncScenario();};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
 async function playEffect(kind, label=kind==='success'?'成功音':'衝突音') {
   const played=await collisionSound.play(kind);
@@ -78,14 +97,14 @@ $('layout-form').onsubmit=e=>{
   e.preventDefault();
   if(!$('layout-form').reportValidity())return;
   const settings=Object.fromEntries(Object.keys(DEFAULT_LAYOUT).map(key=>[key,Number($(key).value)]));
-  layout=createLayout(settings);reset();syncDimensions();
+  layout=createLayout(settings,layout.scenarioId);reset();syncDimensions();
 };
-$('layout-defaults').onclick=()=>{layout=createLayout();reset();syncDimensions();};
+$('layout-defaults').onclick=()=>{layout=createLayout({...layout.scenario.defaults},layout.scenarioId);reset();syncDimensions();};
 syncDimensions();
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});window.addEventListener('blur',stop);
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
-  if(e.target.closest('button, a, input, label, dialog'))return;
+  if(e.target.closest('button, a, input, select, option, label, dialog'))return;
   if(!audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
   contactPosition=null;successCelebrated=false;parkedOk=false;gestureVersion++;
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
@@ -160,7 +179,8 @@ function updateReadout() {
   $('tire-text').textContent=`${Math.round(wheel/CAR.maxWheel*36)}°`;
   $('target-distance').textContent=`目的地まで ${Math.hypot(car.x-layout.target.x,car.y-layout.target.y).toFixed(1)}m`;
   $('dash-wheel').setAttribute('transform',`translate(80 61) rotate(${degrees})`);
-  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'駐車成功！ きれいに停められました。':drag?'中央線で直進。上下にドラッグして前進・後進。':'点線の車形に合わせて、停めてみましょう';
+  const wrongHeading=layout.directed && !drag && speed===0 && isParked(car,layout) && targetAlignment(car,layout).angle>8*Math.PI/180;
+  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'駐車成功！ きれいに停められました。':wrongHeading?'車の前向きを、点線枠の矢印に合わせましょう。':drag?'中央線で直進。上下にドラッグして前進・後進。':'点線の車形に合わせて、停めてみましょう';
   if($('status').textContent!==text)$('status').textContent=text;
 }
 function rect(x,y,w,h,color,r=0) {
@@ -177,35 +197,44 @@ function tree(x,y,r=1) {
   ctx.shadowBlur=0;ctx.fillStyle='#b5c5a2';ctx.beginPath();ctx.arc(x-r*.23,y-r*.15,r*.64,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 function drawMap() {
-  const {left,right,top,bottom,entrance,bayWidth,bayDepth,aisleWidth,target,bays,parked}=layout;
+  const {left,right,top,bottom,entrance,aisleWidth,target,bays,parked}=layout;
   rect(-100,-100,200,200,'#e9ede3');
   ctx.strokeStyle='#e1e6d9';ctx.lineWidth=.025;
-  ctx.beginPath();for(let x=-10;x<45;x++){ctx.moveTo(x,-10);ctx.lineTo(x,40);}for(let y=-10;y<40;y++){ctx.moveTo(-10,y);ctx.lineTo(45,y);}ctx.stroke();
-  rect(left-.5,top-.5,right-left+1,bottom-top+1,'#d6ddce',.45);rect(left,top,right-left,bottom-top,'#f1f2e9',.25);
-  rect(left+.1,top+.1,right-left-.2,bayDepth-.1,'#e9ede2',.1);
-  rect(target.x-bayWidth/2,top,bayWidth,bayDepth,'#d9e5cf',.1);
-  for(let i=0;i<=5;i++) {
-    const x=target.x-bayWidth*2.5+i*bayWidth;
-    line([{x,y:top},{x,y:entrance}],'#fffefa',.07);
-  }
-  line([{x:target.x-bayWidth*2.5,y:top},{x:target.x+bayWidth*2.5,y:top}],'#fffefa',.07);
-  ctx.strokeStyle='#91ad7d';ctx.lineWidth=.065;ctx.setLineDash([.23,.18]);ctx.strokeRect(target.x-bayWidth/2,top,bayWidth,bayDepth);ctx.setLineDash([]);
-  bays.forEach((bay,i)=>{
-    rect(bay.x-.52,top+.45,1.04,.16,'#c3cbb9',.04);
-    text(i===2?'P':`0${i+1}`,bay.x,entrance+.55,.35,i===2?'#739365':'#a6b19c');
+  ctx.beginPath();for(let x=-10;x<60;x++){ctx.moveTo(x,-10);ctx.lineTo(x,50);}for(let y=-10;y<50;y++){ctx.moveTo(-10,y);ctx.lineTo(60,y);}ctx.stroke();
+  rect(left-.4,top-.4,right-left+.8,bottom-top+.8,'#d6ddce',.4);
+  rect(left,top,right-left,bottom-top,'#f1f2e9',.2);
+  bays.forEach((bay,index)=>{
+    const shape=corners(bay,bay.length,bay.width);
+    ctx.beginPath();shape.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();
+    ctx.fillStyle=bay.isTarget?'#d9e5cf':'#e6ebdf';ctx.fill();
+    ctx.strokeStyle=bay.isTarget?'#91ad7d':'#fffefa';ctx.lineWidth=bay.isTarget?.065:.06;
+    if(bay.isTarget)ctx.setLineDash([.23,.18]);ctx.stroke();ctx.setLineDash([]);
+    const y=bay.row===0?entrance+.45:entrance+aisleWidth-.45;
+    text(bay.isTarget?'P':String(index+1).padStart(2,'0'),bay.x,y,.3,bay.isTarget?'#739365':'#a6b19c');
   });
-  text('P',target.x,target.y,.9,'#91ad7d');text('ここに駐車',target.x,target.y+1.1,.32,'#85a173');
+  text('P',target.x,target.y,.8,'#91ad7d');
   ctx.save();ctx.translate(target.x,target.y);ctx.rotate(target.heading);
+  ctx.fillStyle='#b9d8d61f';ctx.fillRect(-CAR.length/2,-CAR.width/2,CAR.length,CAR.width);
   ctx.strokeStyle=parkedOk?'#548d58':'#548590';ctx.lineWidth=.06;ctx.setLineDash([.2,.13]);
-  ctx.strokeRect(-CAR.length/2,-CAR.width/2,CAR.length,CAR.width);ctx.setLineDash([]);ctx.restore();
-  const aisleCenter=entrance+aisleWidth/2;
-  line([{x:left+1,y:aisleCenter},{x:right-1,y:aisleCenter}],'#dfe4d7',.055,[.5,.5]);
-  for(const x of [left+2,right-2]) {
-    const y=entrance+aisleWidth*.75;
-    line([{x:x+.7,y},{x:x-.7,y}],'#c6cfbc',.08);line([{x:x-.2,y:y-.35},{x:x-.7,y},{x:x-.2,y:y+.35}],'#c6cfbc',.08);
+  ctx.strokeRect(-CAR.length/2,-CAR.width/2,CAR.length,CAR.width);ctx.setLineDash([]);
+  if(layout.directed){
+    line([{x:-.6,y:0},{x:1.35,y:0}],'#548590',.07);
+    line([{x:.95,y:-.3},{x:1.35,y:0},{x:.95,y:.3}],'#548590',.07);
   }
-  text('PARKING LAB',target.x,bottom-.55,.26,'#abb6a0');
-  for(const x of [left+1,left+(right-left)/3,right-(right-left)/3,right-1]) {tree(x,top-2,.8);tree(x,bottom+2,.8);}
+  ctx.restore();
+  const aisleCenter=entrance+aisleWidth/2;
+  line([{x:left+.7,y:aisleCenter},{x:right-.7,y:aisleCenter}],'#dfe4d7',.055,[.5,.5]);
+  for(const x of [left+1.2,right-1.2]){
+    const y=entrance+aisleWidth*.76,direction=Math.cos(layout.start.heading)>0?1:-1;
+    line([{x:x-direction*.45,y},{x:x+direction*.45,y}],'#c6cfbc',.08);
+    line([{x,y:y-.25},{x:x+direction*.45,y},{x,y:y+.25}],'#c6cfbc',.08);
+  }
+  const wall='#aab6a1';
+  line([{x:left,y:top},{x:right,y:top}],wall,.14);
+  line([{x:left,y:bottom},{x:right,y:bottom}],wall,.14);
+  line([{x:left,y:top},{x:left,y:bottom}],layout.scenarioId==='dead-end-left'?'#87947d':wall,layout.scenarioId==='dead-end-left'?.25:.12);
+  line([{x:right,y:top},{x:right,y:bottom}],layout.scenarioId==='dead-end-right'?'#87947d':wall,layout.scenarioId==='dead-end-right'?.25:.12);
+  for(const x of [left+1,right-1]){tree(x,top-1.5,.65);tree(x,bottom+1.5,.65);}
   for(const p of parked)drawCar(p,p.color,false);
 }
 function drawCar(p,color,active) {
@@ -250,10 +279,11 @@ function render() {
   // Leave room for the fixed toolbar and bottom information strip.
   // Fit five car widths across and three car lengths vertically; extra space
   // on wide screens stays visible without stretching the vehicle.
-  const scale=Math.min(bounds.width/(CAR.width*5),(bounds.height-100)/(CAR.length*3));
+  const scale=overview?Math.min((bounds.width-30)/(layout.right-layout.left+2),(bounds.height-125)/(layout.bottom-layout.top+2)):Math.min(bounds.width/(CAR.width*5),(bounds.height-100)/(CAR.length*3));
   const centerX=bounds.width/2,centerY=57+(bounds.height-115)/2;
   ctx.save();ctx.translate(centerX,centerY);ctx.scale(scale,scale);
-  if(mode==='car'){ctx.rotate(-Math.PI/2-car.heading);ctx.translate(-car.x,-car.y);}
+  if(overview)ctx.translate(-(layout.left+layout.right)/2,-(layout.top+layout.bottom)/2);
+  else if(mode==='car'){ctx.rotate(-Math.PI/2-car.heading);ctx.translate(-car.x,-car.y);}
   else ctx.translate(-mapCenter.x,-mapCenter.y);
   drawMap();
   if($('trail').checked)for(let j=0;j<2;j++)line(trace.map(t=>t[j]),'#7c9f6c88',.045,[.1,.12]);

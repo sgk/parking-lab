@@ -1,0 +1,94 @@
+{
+  "site": "https://parking-lab-sgk-20261106.playfuldart.chatgpt.site",
+  "recording": false,
+  "started": "2026-11-06T13:42:49.057Z",
+  "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
+  "cases": [
+    {
+      "input": "mouse",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "drive-into-wall",
+      "file": null,
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "repeat-same-wall",
+      "file": null,
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "after-page-freeze-wall",
+      "file": null,
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "parking-success",
+      "file": null,
+      "status": "駐車成功！ きれいに停められました。",
+      "sound": "成功音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "drive-into-wall",
+      "file": null,
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "repeat-same-wall",
+      "file": null,
+      "status": "接触しました。反対方向へ動かして離れましょう。",
+      "sound": "衝突音の再生を開始しました。",
+      "signal": "衝突音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.47",
+    "revision": "@1d17a2e2ee147bb7d6ae2ab6abdb3a2510c17775",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.19"
+  },
+  "error": "Error: Timed out: Input.dispatchTouchEvent"
+}

@@ -41,6 +41,15 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   element('bayWidth').value='2.5';element('bayDepth').value='5';element('aisleWidth').value='4';
   read('speed=1;trace.push([])');element('layout-form').onsubmit({preventDefault(){}});
   assert.equal(read('layout.bayWidth'),2.5);assert.equal(read('speed'),0);assert.equal(read('trace.length'),0);assert.equal(read('blocked(car)'),false);
+  element('scenario-select').value='parallel-left';element('scenario-select').onchange();
+  assert.equal(read('layout.scenarioId'),'parallel-left');assert.equal(read('layout.parked.length'),2);
+  assert.equal(element('bayDepth-label').textContent,'縦列枠の長さ');
+  element('bayWidth').value='3';element('bayDepth').value='7';element('aisleWidth').value='6';element('layout-form').onsubmit({preventDefault(){}});
+  assert.equal(read('layout.scenarioId'),'parallel-left');assert.equal(read('layout.bayDepth'),7);
+  element('layout-defaults').onclick();assert.equal(read('layout.bayDepth'),6.5);
+  element('scenario-next').onclick();assert.equal(read('layout.scenarioId'),'parallel-right');
+  element('scenario-prev').onclick();assert.equal(read('layout.scenarioId'),'parallel-left');
+  element('overview').onclick();assert.equal(read('overview'),true);assert.equal(element('overview').attributes['aria-pressed'],'true');
 });
 
 test('collision audio survives suspension, sounds while held, and rearms on a new drag',async()=>{
