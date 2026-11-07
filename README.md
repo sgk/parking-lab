@@ -2,6 +2,8 @@
 
 点数や時間制限のない、初心者向けの車庫入れシミュレーターです。外部ライブラリ、外部フォント、通信、アカウント登録は不要です。
 
+[ブラウザで試す](https://parking-lab-sgk-20261106.playfuldart.chatgpt.site) · [GitHub](https://github.com/sgk/parking-lab)
+
 ## ローカルで使う
 
 ```sh
