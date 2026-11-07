@@ -1,6 +1,7 @@
 import { CAR, advance, corners, dragInput } from './physics.js';
 import { DEFAULT_LAYOUT, DIMENSION_LIMITS, SCENARIOS, getScenario, createLayout, isBlocked, isParked, isAtTarget, targetAlignment } from './layout.js?v=scenarios-1';
 import { createCollisionSound } from './sound.js?v=signal-1';
+import { mapCards } from './thumbnails.js?v=gallery-1';
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene'), ctx = canvas.getContext('2d');
@@ -15,7 +16,7 @@ const collisionSound = createCollisionSound(window.AudioContext, message => {
 });
 let contactPosition=null, audioReady=false, gestureVersion=0;
 let layout = createLayout();
-let mapCenter = {x:24,y:16.8}, overview=false;
+let mapCenter = {x:24,y:16.8}, overview=false, activeScreen='maps', galleryScroll=0;
 let car, wheel=0, speed=0, drag=null, mode='car', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false, successCelebrated=false;
 function reset() {
   car={...layout.start};wheel=0;speed=0;drag=null;trace=[];lastTrace=null;collision=false;parkedOk=false;
@@ -33,7 +34,7 @@ function setMode(next) {
 }
 function syncScenario() {
   const scenario=layout.scenario;
-  $('scenario-select').value=scenario.id;$('scenario-title').textContent=scenario.title;
+  $('scenario-title').textContent=scenario.title;
   $('scenario-description').textContent=scenario.description;
   $('scenario-category').textContent=scenario.category;
   $('scenario-rule').textContent=({either:'前向き・バック自由',reverse:'バック駐車指定',forward:'前向き駐車指定',aligned:'進行方向と同じ向き'})[scenario.rule];
@@ -44,10 +45,34 @@ function syncScenario() {
 function changeScenario(id) {
   const scenario=getScenario(id);layout=createLayout({...scenario.defaults},id);reset();syncDimensions();
 }
-$('scenario-select').innerHTML=SCENARIOS.map(scenario=>`<option value="${scenario.id}">${scenario.title}</option>`).join('');
-$('scenario-select').onchange=()=>changeScenario($('scenario-select').value);
-$('scenario-prev').onclick=()=>changeScenario(SCENARIOS[(SCENARIOS.indexOf(layout.scenario)+SCENARIOS.length-1)%SCENARIOS.length].id);
-$('scenario-next').onclick=()=>changeScenario(SCENARIOS[(SCENARIOS.indexOf(layout.scenario)+1)%SCENARIOS.length].id);
+$('map-gallery').innerHTML=mapCards(SCENARIOS,createLayout);
+$('map-gallery').onclick=event=>{
+  const card=event.target.closest('button[data-scenario]');
+  if(!card)return;
+  getScenario(card.dataset.scenario);galleryScroll=window.scrollY;
+  window.location.hash=`#play/${card.dataset.scenario}`;
+};
+$('back-to-maps').onclick=()=>{window.location.hash='#maps';};
+function showMapSelection(error='') {
+  activeScreen='maps';$('map-screen').hidden=false;$('play-screen').hidden=true;
+  $('route-error').hidden=!error;$('route-error').textContent=error;
+  document.title='車庫入れラボ — マップを選ぶ';
+  window.scrollTo(0,galleryScroll);$('maps-heading').focus({preventScroll:true});
+}
+function applyRoute() {
+  stop();
+  const hash=window.location.hash;
+  if(!hash||hash==='#maps'){showMapSelection();return;}
+  const match=hash.match(/^#play\/([a-z-]+)$/);
+  if(!match||!SCENARIOS.some(scenario=>scenario.id===match[1])){
+    showMapSelection('このマップは見つかりません。一覧のサムネイルから選んでください。');return;
+  }
+  activeScreen='play';$('map-screen').hidden=true;$('play-screen').hidden=false;
+  overview=false;changeScenario(match[1]);setMode('car');
+  document.title=`${layout.scenario.title} — 車庫入れラボ`;
+  window.scrollTo(0,0);$('scenario-title').focus({preventScroll:true});
+}
+window.addEventListener('hashchange',applyRoute);
 $('overview').onclick=()=>{stop();overview=!overview;syncScenario();};
 $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car');
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
@@ -105,7 +130,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});w
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, select, option, label, dialog'))return;
-  if(!audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
+  if(activeScreen!=='play' || !audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
   contactPosition=null;successCelebrated=false;parkedOk=false;gestureVersion++;
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
   drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0};speed=0;
@@ -309,5 +334,5 @@ function render() {
     ctx.beginPath();ctx.arc(x+drag.dx,y+drag.dy,6,0,Math.PI*2);ctx.fillStyle='#547c55bb';ctx.fill();ctx.restore();
   }
 }
-function frame(time){const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;update(dt);render();requestAnimationFrame(frame);}
-reset();requestAnimationFrame(frame);
+function frame(time){const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;if(activeScreen==='play'){update(dt);render();}requestAnimationFrame(frame);}
+reset();applyRoute();requestAnimationFrame(frame);

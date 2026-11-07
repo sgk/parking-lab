@@ -1,11 +1,30 @@
 {
   "site": "http://127.0.0.1:4173",
   "recording": false,
-  "started": "2026-11-07T01:32:22.650Z",
+  "started": "2026-11-07T01:55:07.743Z",
   "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
   "cases": [
     {
       "input": "mouse",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "initial-audio-activation",
       "status": "点線の車形に合わせて、停めてみましょう",
       "sound": "テスト音の再生を開始しました。",
@@ -15,6 +34,15 @@
     },
     {
       "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "standard",
       "wrongDirection": true,
       "geometry": {
@@ -47,6 +75,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "reverse",
+      "hash": "#play/reverse",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -87,6 +124,15 @@
     },
     {
       "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "forward",
+      "hash": "#play/forward",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "forward",
       "wrongDirection": true,
       "geometry": {
@@ -119,6 +165,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "parallel-left",
+      "hash": "#play/parallel-left",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -159,6 +214,15 @@
     },
     {
       "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "parallel-right",
+      "hash": "#play/parallel-right",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "parallel-right",
       "wrongDirection": true,
       "geometry": {
@@ -191,6 +255,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "dead-end-left",
+      "hash": "#play/dead-end-left",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -231,6 +304,15 @@
     },
     {
       "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "dead-end-right",
+      "hash": "#play/dead-end-right",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "dead-end-right",
       "wrongDirection": true,
       "geometry": {
@@ -263,6 +345,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "narrow",
+      "hash": "#play/narrow",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -303,6 +394,15 @@
     },
     {
       "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "opposing",
+      "hash": "#play/opposing",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "opposing",
       "wrongDirection": true,
       "geometry": {
@@ -339,6 +439,15 @@
     },
     {
       "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "angled",
+      "hash": "#play/angled",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "angled",
       "wrongDirection": true,
       "geometry": {
@@ -371,6 +480,30 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "browser-back-and-forward",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -384,6 +517,15 @@
     },
     {
       "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "standard",
       "wrongDirection": true,
       "geometry": {
@@ -416,6 +558,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "reverse",
+      "hash": "#play/reverse",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -456,6 +607,15 @@
     },
     {
       "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "forward",
+      "hash": "#play/forward",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "forward",
       "wrongDirection": true,
       "geometry": {
@@ -488,6 +648,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "parallel-left",
+      "hash": "#play/parallel-left",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -528,6 +697,15 @@
     },
     {
       "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "parallel-right",
+      "hash": "#play/parallel-right",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "parallel-right",
       "wrongDirection": true,
       "geometry": {
@@ -560,6 +738,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "dead-end-left",
+      "hash": "#play/dead-end-left",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -600,6 +787,15 @@
     },
     {
       "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "dead-end-right",
+      "hash": "#play/dead-end-right",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "dead-end-right",
       "wrongDirection": true,
       "geometry": {
@@ -632,6 +828,15 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "narrow",
+      "hash": "#play/narrow",
+      "mapsHidden": true,
+      "playHidden": false,
       "passed": true
     },
     {
@@ -672,6 +877,15 @@
     },
     {
       "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "opposing",
+      "hash": "#play/opposing",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "opposing",
       "wrongDirection": true,
       "geometry": {
@@ -708,6 +922,15 @@
     },
     {
       "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "angled",
+      "hash": "#play/angled",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "angled",
       "wrongDirection": true,
       "geometry": {
@@ -740,6 +963,11 @@
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
       "gate": true,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "browser-back-and-forward",
       "passed": true
     }
   ],
@@ -750,5 +978,5 @@
     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "jsVersion": "15.6.75.19"
   },
-  "finished": "2026-11-07T01:32:44.097Z"
+  "finished": "2026-11-07T01:55:37.263Z"
 }

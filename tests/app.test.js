@@ -5,25 +5,28 @@ import vm from 'node:vm';
 import * as physics from '../dist/physics.js';
 import * as layouts from '../dist/layout.js';
 import { createCollisionSound } from '../dist/sound.js';
+import { mapCards } from '../dist/thumbnails.js';
 import { createAudioMock } from './audio-mock.js';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
-function setup() {
+function setup(play=true) {
   const elements=new Map(),events={},windowEvents={},audio=createAudioMock();
   const element=id=>{
-    if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},addEventListener(){},setPointerCapture(){},reportValidity(){return true;},getContext(){return {};},getBoundingClientRect(){return {left:20,width:400};}});
+    if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},focus(){},addEventListener(){},setPointerCapture(){},reportValidity(){return true;},getContext(){return {};},getBoundingClientRect(){return {left:20,width:400};}});
     return elements.get(id);
   };
   const document={getElementById:element,addEventListener(k,fn){events[k]=fn;}};
-  const context=vm.createContext({...physics,...layouts,createCollisionSound,document,window:{AudioContext:audio.AudioContext,addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
+  const context=vm.createContext({...physics,...layouts,createCollisionSound,mapCards,document,window:{location:{hash:''},scrollY:0,scrollTo(){},AudioContext:audio.AudioContext,addEventListener(k,fn){windowEvents[k]=fn;}},requestAnimationFrame(){}});
   vm.runInContext(fs.readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,''),context);
   const read=expression=>vm.runInContext(expression,context);
   const pointer=(x=220,y=200,control=false)=>({clientX:x,clientY:y,pointerId:1,pointerType:'touch',target:{closest:()=>control?{}:null},preventDefault(){}});
-  return {element,events,windowEvents,audio,read,pointer};
+  const navigate=id=>{read(`window.location.hash=${JSON.stringify('#play/'+id)}`);windowEvents.hashchange();};
+  if(play)navigate('standard');
+  return {element,events,windowEvents,audio,read,pointer,navigate};
 }
 
 test('controls, dimension changes, camera and reset remain functional',async()=>{
-  const {element,events,windowEvents,audio,read,pointer}=setup();
+  const {element,events,windowEvents,audio,read,pointer,navigate}=setup();
   assert.equal(read('mode'),'car');
   element('bayWidth-plus').onclick();assert.equal(element('bayWidth').value,'3.5');assert.equal(read('layout.bayWidth'),3.4);
   element('bayWidth-minus').onclick();assert.equal(element('bayWidth').value,'3.4');
@@ -41,15 +44,29 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   element('bayWidth').value='2.5';element('bayDepth').value='5';element('aisleWidth').value='4';
   read('speed=1;trace.push([])');element('layout-form').onsubmit({preventDefault(){}});
   assert.equal(read('layout.bayWidth'),2.5);assert.equal(read('speed'),0);assert.equal(read('trace.length'),0);assert.equal(read('blocked(car)'),false);
-  element('scenario-select').value='parallel-left';element('scenario-select').onchange();
+  navigate('parallel-left');
   assert.equal(read('layout.scenarioId'),'parallel-left');assert.equal(read('layout.parked.length'),2);
   assert.equal(element('bayDepth-label').textContent,'縦列枠の長さ');
   element('bayWidth').value='3';element('bayDepth').value='7';element('aisleWidth').value='6';element('layout-form').onsubmit({preventDefault(){}});
   assert.equal(read('layout.scenarioId'),'parallel-left');assert.equal(read('layout.bayDepth'),7);
   element('layout-defaults').onclick();assert.equal(read('layout.bayDepth'),6.5);
-  element('scenario-next').onclick();assert.equal(read('layout.scenarioId'),'parallel-right');
-  element('scenario-prev').onclick();assert.equal(read('layout.scenarioId'),'parallel-left');
+  navigate('parallel-right');assert.equal(read('layout.scenarioId'),'parallel-right');
+  navigate('parallel-left');assert.equal(read('layout.scenarioId'),'parallel-left');
   element('overview').onclick();assert.equal(read('overview'),true);assert.equal(element('overview').attributes['aria-pressed'],'true');
+});
+
+test('thumbnail selection opens play, returning stops the car, and unknown maps show an error',()=>{
+  const {element,events,windowEvents,read,pointer}=setup(false);
+  assert.equal(read('activeScreen'),'maps');assert.equal(element('play-screen').hidden,true);
+  assert.equal((element('map-gallery').innerHTML.match(/class="map-card"/g)||[]).length,10);
+  read('audioReady=true');events.pointerdown(pointer());assert.equal(read('drag'),null);
+  element('map-gallery').onclick({target:{closest:()=>({dataset:{scenario:'forward'}})}});
+  windowEvents.hashchange();assert.equal(read('activeScreen'),'play');assert.equal(read('layout.scenarioId'),'forward');
+  assert.equal(element('map-screen').hidden,true);assert.equal(read('mode'),'car');
+  read('speed=1;drag={id:1}');element('back-to-maps').onclick();windowEvents.hashchange();
+  assert.equal(read('activeScreen'),'maps');assert.equal(read('speed'),0);assert.equal(read('drag'),null);
+  read("window.location.hash='#play/missing'");windowEvents.hashchange();
+  assert.equal(element('route-error').hidden,false);assert.match(element('route-error').textContent,/見つかりません/);
 });
 
 test('collision audio survives suspension, sounds while held, and rearms on a new drag',async()=>{

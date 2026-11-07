@@ -92,6 +92,21 @@ try {
     const move=async p=>input==='mouse'?send('Input.dispatchMouseEvent',{type:'mouseMoved',x:p.x,y:p.y,button:'left',buttons:1},s):send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:p.x,y:p.y,id:1}]},s);
     const up=async p=>input==='mouse'?send('Input.dispatchMouseEvent',{type:'mouseReleased',x:p.x,y:p.y,button:'left',clickCount:1},s):send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]},s);
     const snapshot=()=>evaluate(`({status:document.querySelector('#status').textContent,sound:document.querySelector('#sound-status').textContent,signal:document.querySelector('#sound-signal').textContent,contexts:typeof __parkingQA==='undefined'?[]:__parkingQA.contexts.map(c=>({state:c.state,time:c.currentTime,sampleRate:c.sampleRate})),gate:document.querySelector('#sound-gate').hidden})`);
+    const gallery=await evaluate("({count:document.querySelectorAll('.map-card').length,svg:document.querySelectorAll('.map-card svg').length,visible:!document.querySelector('#map-screen').hidden,playHidden:document.querySelector('#play-screen').hidden,overflow:document.documentElement.scrollWidth>innerWidth})");
+    if(gallery.count!==10||gallery.svg!==10||!gallery.visible||!gallery.playHidden||gallery.overflow)throw Error(`${input}: invalid thumbnail gallery`);
+    results.cases.push({input,name:'thumbnail-gallery',...gallery,passed:true});
+    const metrics=await send('Page.getLayoutMetrics',{},s);
+    await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:true,clip:{x:0,y:0,width:metrics.cssContentSize.width,height:metrics.cssContentSize.height,scale:1}},s).then(r=>fs.writeFile(path.join(output,`${input}-map-gallery.png`),Buffer.from(r.data,'base64')));
+    const mapIds=await evaluate("Array.from(document.querySelectorAll('.map-card')).map(card=>card.dataset.scenario)");
+    async function selectMap(id){
+      const selector=`button[data-scenario="${id}"]`;
+      await evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center'})`);
+      const card=await rect(selector);await down(card);await wait(60);await up(card);await wait(150);
+      const route=await evaluate("({hash:location.hash,mapsHidden:document.querySelector('#map-screen').hidden,playHidden:document.querySelector('#play-screen').hidden})");
+      if(route.hash!==`#play/${id}`||!route.mapsHidden||route.playHidden)throw Error(`${input}/${id}: card did not open play`);
+      results.cases.push({input,name:'thumbnail-selection',id,...route,passed:true});
+    }
+    await selectMap('standard');
     await evaluate("document.querySelector('#sound-start').scrollIntoView({block:'center'})");
     const gate=await rect('#sound-start');await down(gate);await wait(80);await up(gate);await wait(1500);
     results.cases.push({input,name:'initial-audio-activation',...await snapshot()});
@@ -100,9 +115,12 @@ try {
       await send('Debugger.enable',{},s);
       const source=await fs.readFile('dist/app.js','utf8');
       const line=source.slice(0,source.indexOf('  parkedOk=!drag && speed===0 && !blocked(car)')).split('\n').length-1;
-      const ids=await evaluate("Array.from(document.querySelector('#scenario-select').options).map(option=>option.value)");
+      const ids=mapIds;
       for(const id of ids){
-        await evaluate(`document.querySelector('#scenario-select').value=${JSON.stringify(id)};document.querySelector('#scenario-select').dispatchEvent(new Event('change'));document.querySelector('.simulation').scrollIntoView({block:'center'});if(document.querySelector('#overview').getAttribute('aria-pressed')!=='true')document.querySelector('#overview').click()`);
+        await evaluate("document.querySelector('#back-to-maps').click()");await wait(100);
+        if(!await evaluate("!document.querySelector('#map-screen').hidden&&document.querySelector('#play-screen').hidden"))throw Error(`${input}: back button did not open maps`);
+        await selectMap(id);
+        await evaluate("document.querySelector('.simulation').scrollIntoView({block:'center'});if(document.querySelector('#overview').getAttribute('aria-pressed')!=='true')document.querySelector('#overview').click()");
         await wait(120);
         await send('Page.captureScreenshot',{format:'png'},s).then(r=>fs.writeFile(path.join(output,`${input}-${id}-overview.png`),Buffer.from(r.data,'base64')));
         const position=await rect('#scene');
@@ -121,6 +139,12 @@ try {
         }
         console.log(JSON.stringify({phase:'scenario-tested',input,id,geometry}));
       }
+      const history=await send('Page.getNavigationHistory',{},s);
+      await send('Page.navigateToHistoryEntry',{entryId:history.entries[history.currentIndex-1].id},s);await wait(150);
+      if(!await evaluate("!document.querySelector('#map-screen').hidden&&document.querySelector('#play-screen').hidden"))throw Error(`${input}: browser Back did not restore gallery`);
+      await send('Page.navigateToHistoryEntry',{entryId:history.entries[history.currentIndex].id},s);await wait(150);
+      if(!await evaluate("document.querySelector('#map-screen').hidden&&!document.querySelector('#play-screen').hidden"))throw Error(`${input}: browser Forward did not restore play`);
+      results.cases.push({input,name:'browser-back-and-forward',passed:true});
       await send('Target.closeTarget',{targetId});continue;
     }
     const canvas=await rect('#scene');
