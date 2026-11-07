@@ -1,15 +1,27 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CAR, advance, corners, overlaps, dragInput } from '../dist/physics.js';
+import { CAR, STEERING_DEAD_ZONE, advance, corners, overlaps, dragInput } from '../dist/physics.js';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
 test('absolute horizontal position controls steering; a tap leaves speed zero',()=>{
   near(dragInput(200,0,400).wheel,0);
   near(dragInput(0,0,400).wheel,-CAR.maxWheel);
   near(dragInput(400,0,400).wheel,CAR.maxWheel);
-  near(dragInput(100,0,400).wheel,-CAR.maxWheel/2);
-  near(dragInput(300,0,400).wheel,CAR.maxWheel/2);
+  near(dragInput(100,0,400).wheel,-CAR.maxWheel*4/9);
+  near(dragInput(300,0,400).wheel,CAR.maxWheel*4/9);
   near(dragInput(400,0,400).speed,0);
   near(dragInput(100,0,200).wheel,0);
+});
+test('the full center band and its boundaries keep wheels exactly straight on every screen width',()=>{
+  for(const width of [320,393,400,1280]){
+    const left=width*(.5-STEERING_DEAD_ZONE),right=width*(.5+STEERING_DEAD_ZONE);
+    for(const x of [left,(left+right)/2,right])assert.equal(dragInput(x,-50,width).wheel,0);
+    near(dragInput(left,-50,width).speed,1);
+    assert.ok(dragInput(left-.01,0,width).wheel<0);
+    assert.ok(dragInput(right+.01,0,width).wheel>0);
+    assert.ok(Math.abs(dragInput(left-.0001,0,width).wheel)<.0001);
+    assert.ok(Math.abs(dragInput(right+.0001,0,width).wheel)<.0001);
+    near(dragInput(0,0,width).wheel,-CAR.maxWheel);near(dragInput(width,0,width).wheel,CAR.maxWheel);
+  }
 });
 test('vertical drag preserves proportional speed, with bounded steering and speed',()=>{
   near(dragInput(200,-50,400).speed,1);near(dragInput(200,50,400).speed,-1);

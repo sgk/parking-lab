@@ -1,4 +1,4 @@
-import { CAR, advance, corners, dragInput } from './physics.js';
+import { CAR, STEERING_DEAD_ZONE, advance, corners, dragInput } from './physics.js?v=deadzone-1';
 import { DEFAULT_LAYOUT, DIMENSION_LIMITS, SCENARIOS, getScenario, createLayout, isBlocked, isParked, isAtTarget, targetAlignment } from './layout.js?v=scenarios-1';
 import { createCollisionSound } from './sound.js?v=signal-1';
 import { mapCards } from './thumbnails.js?v=gallery-1';
@@ -205,7 +205,7 @@ function updateReadout() {
   $('target-distance').textContent=`目的地まで ${Math.hypot(car.x-layout.target.x,car.y-layout.target.y).toFixed(1)}m`;
   $('dash-wheel').setAttribute('transform',`translate(80 61) rotate(${degrees})`);
   const wrongHeading=layout.directed && !drag && speed===0 && isParked(car,layout) && targetAlignment(car,layout).angle>8*Math.PI/180;
-  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'駐車成功！ きれいに停められました。':wrongHeading?'車の前向きを、点線枠の矢印に合わせましょう。':drag?'中央線で直進。上下にドラッグして前進・後進。':'点線の車形に合わせて、停めてみましょう';
+  const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'駐車成功！ きれいに停められました。':wrongHeading?'車の前向きを、点線枠の矢印に合わせましょう。':drag?'直進エリア内はまっすぐ。上下ドラッグで前進・後進。':'点線の車形に合わせて、停めてみましょう';
   if($('status').textContent!==text)$('status').textContent=text;
 }
 function rect(x,y,w,h,color,r=0) {
@@ -322,10 +322,15 @@ function render() {
     ctx.beginPath();ctx.arc(p.x,p.y,.1,0,Math.PI*2);ctx.fillStyle='#d2763f';ctx.fill();
   }
   ctx.restore();
-  ctx.save();ctx.strokeStyle='#426a5480';ctx.lineWidth=1;ctx.setLineDash([6,6]);
+  ctx.save();
+  const straightHalfWidth=bounds.width*STEERING_DEAD_ZONE;
+  ctx.fillStyle='#6f9b6412';ctx.fillRect(centerX-straightHalfWidth,60,straightHalfWidth*2,bounds.height-153);
+  ctx.strokeStyle='#74926b70';ctx.lineWidth=.8;ctx.setLineDash([3,6]);ctx.beginPath();
+  for(const x of [centerX-straightHalfWidth,centerX+straightHalfWidth]){ctx.moveTo(x,60);ctx.lineTo(x,bounds.height-93);}ctx.stroke();
+  ctx.strokeStyle='#426a5480';ctx.lineWidth=1;ctx.setLineDash([6,6]);
   ctx.beginPath();ctx.moveTo(centerX,60);ctx.lineTo(centerX,bounds.height-93);ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle='#f7f9f0e8';ctx.beginPath();ctx.roundRect(centerX-34,bounds.height-94,68,20,5);ctx.fill();
-  text('直進 · 0°',centerX,bounds.height-84,10,'#55734b');ctx.restore();
+  ctx.fillStyle='#f7f9f0e8';ctx.beginPath();ctx.roundRect(centerX-49,bounds.height-94,98,20,5);ctx.fill();
+  text('直進エリア · 0°',centerX,bounds.height-84,10,'#55734b');ctx.restore();
   if(drag && Math.hypot(drag.dx,drag.dy)>2) {
     const x=drag.x-bounds.left,y=drag.y-bounds.top;
     ctx.save();ctx.strokeStyle='#547c5599';ctx.fillStyle='#547c5518';ctx.lineWidth=1;ctx.setLineDash([4,4]);

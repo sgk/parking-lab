@@ -36,8 +36,9 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   events.pointerdown(pointer());assert.equal(read('drag'),null);
   await element('sound-start').onclick();assert.equal(read('audioReady'),true);assert.equal(audio.oscillators().length,6);
   events.pointerdown(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
-  events.pointermove(pointer(320,150));assert.equal(read('speed'),1);assert.equal(read('wheel'),1.5*Math.PI);
-  await events.pointerup(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),1.5*Math.PI);
+  events.pointermove(pointer(320,150));assert.equal(read('speed'),1);assert.ok(Math.abs(read('wheel')-4*Math.PI/3)<1e-8);
+  events.pointermove(pointer(235,150));assert.equal(read('wheel'),0);assert.equal(read('speed'),1);
+  await events.pointerup(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
   events.pointerdown(pointer());windowEvents.blur();assert.equal(read('drag'),null);
   events.pointerdown(pointer(20,20,true));assert.equal(read('drag'),null);
   element('map-mode').onclick();assert.equal(read('mode'),'map');element('car-mode').onclick();assert.equal(read('mode'),'car');

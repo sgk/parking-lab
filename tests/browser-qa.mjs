@@ -5,6 +5,7 @@ import path from 'node:path';
 const origin=process.argv.includes('--local')?'http://127.0.0.1:4173':'https://parking-lab-sgk-20261106.playfuldart.chatgpt.site';
 const recording=!process.argv.includes('--no-recording');
 const scenariosMode=process.argv.includes('--scenarios');
+const deadZoneMode=process.argv.includes('--dead-zone');
 const output=path.resolve('tests/artifacts');
 await fs.mkdir(output,{recursive:true});
 const profile=await fs.mkdtemp('/tmp/parking-lab-chrome-');
@@ -66,7 +67,7 @@ __parkingQA.finishRecording=()=>new Promise(resolve=>{
  };
  __parkingQA.recorder.stop();
 });`;
-const resultsFile=scenariosMode?'scenarios-browser-qa.json':recording?'browser-qa.json':'browser-qa-unrecorded.json';
+const resultsFile=deadZoneMode?'dead-zone-browser-qa.json':scenariosMode?'scenarios-browser-qa.json':recording?'browser-qa.json':'browser-qa-unrecorded.json';
 const results={site:origin,recording,started:new Date().toISOString(),scope:'Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.',cases:[]};
 try {
   results.browser=await send('Browser.getVersion');
@@ -111,6 +112,23 @@ try {
     const gate=await rect('#sound-start');await down(gate);await wait(80);await up(gate);await wait(1500);
     results.cases.push({input,name:'initial-audio-activation',...await snapshot()});
     console.log(JSON.stringify({phase:'activated',input,...await snapshot()}));
+    if(deadZoneMode){
+      await evaluate("document.querySelector('.simulation').scrollIntoView({block:'center'})");
+      const bounds=await evaluate("(()=>{const r=document.querySelector('#scene').getBoundingClientRect();return {left:r.left,width:r.width,y:r.top+r.height/2};})()");
+      for(const ratio of [.4,.46,.5,.54,.6]){
+        const point={x:bounds.left+bounds.width*ratio,y:bounds.y};
+        await down(point);await move({x:point.x,y:point.y-50});await wait(120);
+        const state=await evaluate("({tire:document.querySelector('#tire-text').textContent,wheel:document.querySelector('#wheel-text').textContent,gear:document.querySelector('#gear').textContent})");
+        const straight=ratio>=.45&&ratio<=.55;
+        const passed=state.gear==='D'&&(straight?state.tire==='0°'&&state.wheel==='まっすぐ':parseInt(state.tire)*(ratio<.5?-1:1)>0);
+        results.cases.push({input,name:'steering-dead-zone',ratio,...state,passed});
+        if(!passed)throw Error(`${input}: incorrect steering at ${ratio}`);
+        if(ratio===.54)await send('Page.captureScreenshot',{format:'png'},s).then(r=>fs.writeFile(path.join(output,`${input}-dead-zone.png`),Buffer.from(r.data,'base64')));
+        await up(point);
+      }
+      console.log(JSON.stringify({phase:'dead-zone-verified',input}));
+      await send('Target.closeTarget',{targetId});continue;
+    }
     if(scenariosMode){
       await send('Debugger.enable',{},s);
       const source=await fs.readFile('dist/app.js','utf8');

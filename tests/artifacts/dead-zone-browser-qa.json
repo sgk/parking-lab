@@ -1,0 +1,162 @@
+{
+  "site": "http://127.0.0.1:4173",
+  "recording": false,
+  "started": "2026-11-07T02:36:41.413Z",
+  "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
+  "cases": [
+    {
+      "input": "mouse",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "steering-dead-zone",
+      "ratio": 0.4,
+      "tire": "-4°",
+      "wheel": "左 60°",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "steering-dead-zone",
+      "ratio": 0.46,
+      "tire": "0°",
+      "wheel": "まっすぐ",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "steering-dead-zone",
+      "ratio": 0.5,
+      "tire": "0°",
+      "wheel": "まっすぐ",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "steering-dead-zone",
+      "ratio": 0.54,
+      "tire": "0°",
+      "wheel": "まっすぐ",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "steering-dead-zone",
+      "ratio": 0.6,
+      "tire": "4°",
+      "wheel": "右 60°",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "steering-dead-zone",
+      "ratio": 0.4,
+      "tire": "-4°",
+      "wheel": "左 60°",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "steering-dead-zone",
+      "ratio": 0.46,
+      "tire": "0°",
+      "wheel": "まっすぐ",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "steering-dead-zone",
+      "ratio": 0.5,
+      "tire": "0°",
+      "wheel": "まっすぐ",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "steering-dead-zone",
+      "ratio": 0.54,
+      "tire": "0°",
+      "wheel": "まっすぐ",
+      "gear": "D",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "steering-dead-zone",
+      "ratio": 0.6,
+      "tire": "4°",
+      "wheel": "右 60°",
+      "gear": "D",
+      "passed": true
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.47",
+    "revision": "@1d17a2e2ee147bb7d6ae2ab6abdb3a2510c17775",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.19"
+  },
+  "finished": "2026-11-07T02:36:49.078Z"
+}

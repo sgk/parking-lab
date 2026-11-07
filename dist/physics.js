@@ -1,4 +1,6 @@
 export const CAR = { length: 4.4, width: 1.8, wheelbase: 2.6, maxSteer: Math.PI / 5, maxWheel: Math.PI * 3, rearOffset: 1.3 };
+// Each side of the center occupies 5% of the play area's width.
+export const STEERING_DEAD_ZONE = .05;
 export const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 export function advance(car, speed, wheel, dt) {
   const steer = wheel / CAR.maxWheel * CAR.maxSteer;
@@ -29,5 +31,9 @@ export function overlaps(a, b) {
   return true;
 }
 export function dragInput(x, dy, viewportWidth, sensitivity=100) {
-  return { wheel: clamp((x / viewportWidth - .5) * 2, -1, 1) * CAR.maxWheel, speed: clamp(-dy / sensitivity, -1, 1) * 2 };
+  const left=viewportWidth*(.5-STEERING_DEAD_ZONE),right=viewportWidth*(.5+STEERING_DEAD_ZONE);
+  let steering=0;
+  if(x<left)steering=(x-left)/left;
+  else if(x>right)steering=(x-right)/(viewportWidth-right);
+  return { wheel: clamp(steering,-1,1)*CAR.maxWheel, speed: clamp(-dy / sensitivity, -1, 1) * 2 };
 }
