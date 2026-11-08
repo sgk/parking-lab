@@ -35,7 +35,7 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   element('layout-defaults').onclick();
   events.pointerdown(pointer());assert.equal(read('drag'),null);
   await element('sound-start').onclick();assert.equal(read('audioReady'),true);assert.equal(audio.oscillators().length,6);
-  events.pointerdown(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
+  events.pointerdown(pointer());assert.equal(read('speed'),physics.CREEP_SPEED);assert.equal(read('wheel'),0);
   events.pointermove(pointer(320,150));assert.equal(read('speed'),1);assert.ok(Math.abs(read('wheel')-4*Math.PI/3)<1e-8);
   events.pointermove(pointer(235,150));assert.equal(read('wheel'),0);assert.equal(read('speed'),1);
   await events.pointerup(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
@@ -54,6 +54,24 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   navigate('parallel-right');assert.equal(read('layout.scenarioId'),'parallel-right');
   navigate('parallel-left');assert.equal(read('layout.scenarioId'),'parallel-left');
   element('overview').onclick();assert.equal(read('overview'),true);assert.equal(element('overview').attributes['aria-pressed'],'true');
+});
+
+test('holding without a vertical drag creeps, preserves absolute steering, and stops on release',async()=>{
+  const {element,events,read,pointer}=setup();await element('sound-start').onclick();
+  const before=read('({...car})');
+  events.pointerdown(pointer());read('update(1)');
+  assert.ok(Math.abs(read('car.x')-(before.x-physics.CREEP_SPEED))<1e-8);
+  assert.equal(read('car.y'),before.y);assert.equal(read('wheel'),0);
+  events.pointermove(pointer(320,200));
+  assert.equal(read('speed'),physics.CREEP_SPEED);assert.ok(read('wheel')>0);
+  events.pointermove(pointer(220,202));assert.equal(read('speed'),physics.CREEP_SPEED);assert.equal(read('wheel'),0);
+  events.pointermove(pointer(220,150));assert.equal(read('speed'),1);
+  events.pointermove(pointer());assert.ok(read('speed')===0,'returning to the origin after vertical dragging still stops');
+  events.pointermove(pointer(220,250));assert.equal(read('speed'),-1);
+  await events.pointerup(pointer());assert.equal(read('speed'),0);
+  const stopped=read('({...car})');read('update(1)');assert.equal(read('car.x'),stopped.x);assert.equal(read('car.y'),stopped.y);
+  events.pointerdown(pointer());assert.equal(read('speed'),physics.CREEP_SPEED,'a fresh press starts creeping again');
+  await events.pointercancel(pointer());assert.equal(read('speed'),0);
 });
 
 test('thumbnail selection opens play, returning stops the car, and unknown maps show an error',()=>{

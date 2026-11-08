@@ -1,4 +1,4 @@
-import { CAR, STEERING_DEAD_ZONE, advance, corners, dragInput } from './physics.js?v=deadzone-1';
+import { CAR, STEERING_DEAD_ZONE, CREEP_SPEED, VERTICAL_DRAG_THRESHOLD, advance, corners, dragInput } from './physics.js?v=creep-1';
 import { DEFAULT_LAYOUT, DIMENSION_LIMITS, SCENARIOS, getScenario, createLayout, isBlocked, isParked, isAtTarget, targetAlignment } from './layout.js?v=scenarios-1';
 import { createCollisionSound } from './sound.js?v=signal-1';
 import { mapCards } from './thumbnails.js?v=gallery-1';
@@ -133,16 +133,17 @@ document.addEventListener('pointerdown',e=>{
   if(activeScreen!=='play' || !audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
   contactPosition=null;successCelebrated=false;parkedOk=false;gestureVersion++;
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
-  drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0};speed=0;
+  drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0,verticalDrag:false};speed=CREEP_SPEED;
   const bounds=canvas.getBoundingClientRect();
   wheel=dragInput(e.clientX-bounds.left,0,bounds.width).wheel;
 });
 document.addEventListener('pointermove',e=>{
   if(!drag || drag.id!==e.pointerId)return;
   drag.dx=e.clientX-drag.x;drag.dy=e.clientY-drag.y;
+  if(Math.abs(drag.dy)>VERTICAL_DRAG_THRESHOLD)drag.verticalDrag=true;
   const bounds=canvas.getBoundingClientRect();
   const input=dragInput(e.clientX-bounds.left,drag.dy,bounds.width);
-  wheel=input.wheel;speed=input.speed;
+  wheel=input.wheel;speed=drag.verticalDrag?input.speed:CREEP_SPEED;
 });
 for(const event of ['pointerup','pointercancel','lostpointercapture']) document.addEventListener(event,async e=>{
   if(drag?.id!==e.pointerId)return;

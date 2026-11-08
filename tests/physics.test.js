@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CAR, STEERING_DEAD_ZONE, advance, corners, overlaps, dragInput } from '../dist/physics.js';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
-test('absolute horizontal position controls steering; a tap leaves speed zero',()=>{
+test('absolute steering and vertical drag input preserve their mappings',()=>{
   near(dragInput(200,0,400).wheel,0);
   near(dragInput(0,0,400).wheel,-CAR.maxWheel);
   near(dragInput(400,0,400).wheel,CAR.maxWheel);

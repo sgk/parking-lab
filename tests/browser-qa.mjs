@@ -6,6 +6,7 @@ const origin=process.argv.includes('--local')?'http://127.0.0.1:4173':'https://p
 const recording=!process.argv.includes('--no-recording');
 const scenariosMode=process.argv.includes('--scenarios');
 const deadZoneMode=process.argv.includes('--dead-zone');
+const creepMode=process.argv.includes('--creep');
 const output=path.resolve('tests/artifacts');
 await fs.mkdir(output,{recursive:true});
 const profile=await fs.mkdtemp('/tmp/parking-lab-chrome-');
@@ -67,7 +68,7 @@ __parkingQA.finishRecording=()=>new Promise(resolve=>{
  };
  __parkingQA.recorder.stop();
 });`;
-const resultsFile=deadZoneMode?'dead-zone-browser-qa.json':scenariosMode?'scenarios-browser-qa.json':recording?'browser-qa.json':'browser-qa-unrecorded.json';
+const resultsFile=creepMode?'creep-browser-qa.json':deadZoneMode?'dead-zone-browser-qa.json':scenariosMode?'scenarios-browser-qa.json':recording?'browser-qa.json':'browser-qa-unrecorded.json';
 const results={site:origin,recording,started:new Date().toISOString(),scope:'Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.',cases:[]};
 try {
   results.browser=await send('Browser.getVersion');
@@ -112,6 +113,30 @@ try {
     const gate=await rect('#sound-start');await down(gate);await wait(80);await up(gate);await wait(1500);
     results.cases.push({input,name:'initial-audio-activation',...await snapshot()});
     console.log(JSON.stringify({phase:'activated',input,...await snapshot()}));
+    if(creepMode){
+      await evaluate("document.querySelector('.simulation').scrollIntoView({block:'center'})");
+      const bounds=await evaluate("(()=>{const r=document.querySelector('#scene').getBoundingClientRect();return {left:r.left,width:r.width,y:r.top+r.height/2};})()");
+      const point={x:bounds.left+bounds.width/2,y:bounds.y};
+      const beforeDistance=await evaluate("document.querySelector('#target-distance').textContent");
+      async function check(name,action,expected){
+        await action();await wait(120);
+        const state=await evaluate("({gear:document.querySelector('#gear').textContent,speed:document.querySelector('#speed').textContent,tire:document.querySelector('#tire-text').textContent,distance:document.querySelector('#target-distance').textContent})");
+        const passed=Object.entries(expected).every(([key,value])=>state[key]===value);
+        results.cases.push({input,name,...state,passed});if(!passed)throw Error(`${input}/${name}: incorrect creep control`);
+        return state;
+      }
+      const held=await check('press-only-creep',async()=>{await down(point);await wait(700);},{gear:'D',speed:'1.1',tire:'0°'});
+      if(held.distance===beforeDistance)throw Error(`${input}: press-only did not move the car`);
+      await send('Page.captureScreenshot',{format:'png'},s).then(r=>fs.writeFile(path.join(output,`${input}-creep.png`),Buffer.from(r.data,'base64')));
+      await check('horizontal-only-creep',()=>move({x:point.x+bounds.width*.2,y:point.y}),{gear:'D',speed:'1.1'});
+      await check('touch-jitter-keeps-creep',()=>move({x:point.x,y:point.y+2}),{gear:'D',speed:'1.1',tire:'0°'});
+      await check('upward-drag',()=>move({x:point.x,y:point.y-50}),{gear:'D',speed:'3.6'});
+      await check('return-to-origin-stops',()=>move(point),{gear:'N',speed:'0.0'});
+      await check('downward-drag-reverses',()=>move({x:point.x,y:point.y+50}),{gear:'R',speed:'3.6'});
+      await check('release-stops',()=>up(point),{gear:'N',speed:'0.0'});
+      await check('next-press-creeps',()=>down(point),{gear:'D',speed:'1.1'});await up(point);
+      console.log(JSON.stringify({phase:'creep-verified',input}));await send('Target.closeTarget',{targetId});continue;
+    }
     if(deadZoneMode){
       await evaluate("document.querySelector('.simulation').scrollIntoView({block:'center'})");
       const bounds=await evaluate("(()=>{const r=document.querySelector('#scene').getBoundingClientRect();return {left:r.left,width:r.width,y:r.top+r.height/2};})()");

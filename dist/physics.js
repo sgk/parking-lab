@@ -1,6 +1,8 @@
 export const CAR = { length: 4.4, width: 1.8, wheelbase: 2.6, maxSteer: Math.PI / 5, maxWheel: Math.PI * 3, rearOffset: 1.3 };
 // Each side of the center occupies 5% of the play area's width.
 export const STEERING_DEAD_ZONE = .05;
+export const CREEP_SPEED = .3; // m/s, about 1.1 km/h while held without vertical dragging.
+export const VERTICAL_DRAG_THRESHOLD = 4; // Ignore small touch jitter before speed control starts.
 export const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 export function advance(car, speed, wheel, dt) {
   const steer = wheel / CAR.maxWheel * CAR.maxSteer;
