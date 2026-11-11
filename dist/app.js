@@ -1,4 +1,4 @@
-import { CAR, STEERING_DEAD_ZONE, CREEP_SPEED, ACCEL_DRAG_THRESHOLD, advance, corners, createControlBasis, pointerInput } from './physics.js?v=car-relative-1';
+import { CAR, STEERING_DEAD_ZONE, ACCEL_DEAD_ZONE, advance, corners, createControlBasis, pointerInput } from './physics.js?v=position-controls-1';
 import { DEFAULT_LAYOUT, DIMENSION_LIMITS, SCENARIOS, getScenario, createLayout, isBlocked, isParked, isAtTarget, targetAlignment } from './layout.js?v=scenarios-1';
 import { createCollisionSound } from './sound.js?v=signal-1';
 import { mapCards } from './thumbnails.js?v=gallery-1';
@@ -45,10 +45,9 @@ function syncScenario() {
   $('practice-name').textContent=scenario.title;$('practice-number').textContent=String(SCENARIOS.indexOf(scenario)+1).padStart(2,'0');
   $('bayDepth-label').textContent=scenario.kind==='parallel'?'縦列枠の長さ':'駐車ロットの奥行き';
   $('overview').textContent=overview?'全体図を閉じる':'全体図を見る';$('overview').setAttribute('aria-pressed',String(overview));
-  const relative=mode==='map'||overview;
-  canvas.setAttribute('aria-label',relative?'真上から見た駐車場。押した瞬間の車の前後・左右を基準に運転します。':'真上から見た駐車場。横位置でハンドル角度を決め、上下にドラッグして運転します。');
-  $('accel-instruction').textContent=relative?'車の前へドラッグで前進、後ろへドラッグで後進。':'上下ドラッグで速度を調整。上で前進、下で後進。';
-  $('steer-instruction').textContent=relative?'車から見た左右の位置で操作。直進エリア内はまっすぐ。':'中央の直進エリア内はまっすぐ。左右端で最大角度。';
+  canvas.setAttribute('aria-label','真上から見た駐車場。現在の車に対する前後位置で速度、左右位置でハンドルを操作します。');
+  $('accel-instruction').textContent='横向きの停止帯より前で前進、後ろで後進。帯の中は停止。';
+  $('steer-instruction').textContent='車から見た左右の位置で操作。縦向きの直進帯の中はまっすぐ。';
 }
 function changeScenario(id) {
   const scenario=getScenario(id);layout=createLayout({...scenario.defaults},id);reset();syncDimensions();
@@ -147,21 +146,22 @@ function currentControlBasis(bounds) {
   const view=cameraView(bounds);
   return createControlBasis({x:bounds.left+view.carX,y:bounds.top+view.carY},car.heading+view.rotation,bounds.width,bounds.height);
 }
+function applyPointerInput() {
+  if(!drag)return;
+  const input=pointerInput(drag,currentControlBasis(canvas.getBoundingClientRect()));
+  wheel=input.wheel;speed=input.speed;
+}
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, select, option, label, dialog'))return;
   if(activeScreen!=='play' || !audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
   contactPosition=null;successCelebrated=false;parkedOk=false;gestureVersion++;
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
-  const bounds=canvas.getBoundingClientRect();
-  drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0,accelDrag:false,basis:currentControlBasis(bounds)};speed=CREEP_SPEED;
-  wheel=pointerInput({x:e.clientX,y:e.clientY},drag,drag.basis).wheel;
+  drag={id:e.pointerId,x:e.clientX,y:e.clientY};
+  applyPointerInput();
 });
 document.addEventListener('pointermove',e=>{
   if(!drag || drag.id!==e.pointerId)return;
-  drag.dx=e.clientX-drag.x;drag.dy=e.clientY-drag.y;
-  const input=pointerInput({x:e.clientX,y:e.clientY},drag,drag.basis);
-  if(Math.abs(input.forwardDrag)>ACCEL_DRAG_THRESHOLD)drag.accelDrag=true;
-  wheel=input.wheel;speed=drag.accelDrag?input.speed:CREEP_SPEED;
+  drag.x=e.clientX;drag.y=e.clientY;applyPointerInput();
 });
 for(const event of ['pointerup','pointercancel','lostpointercapture']) document.addEventListener(event,async e=>{
   if(drag?.id!==e.pointerId)return;
@@ -224,7 +224,7 @@ function updateReadout() {
   $('target-distance').textContent=`目的地まで ${Math.hypot(car.x-layout.target.x,car.y-layout.target.y).toFixed(1)}m`;
   $('dash-wheel').setAttribute('transform',`translate(80 61) rotate(${degrees})`);
   const wrongHeading=layout.directed && !drag && speed===0 && isParked(car,layout) && targetAlignment(car,layout).angle>8*Math.PI/180;
-  const drivingHint=mode==='map'||overview?'車の前後へドラッグで前進・後進。左右も車を基準に操作。':'直進エリア内はまっすぐ。上下ドラッグで前進・後進。';
+  const drivingHint='車より前で前進、後ろで後進。横の停止帯は停止、縦の直進帯はまっすぐ。';
   const text=collision?'接触しました。反対方向へ動かして離れましょう。':parkedOk?'駐車成功！ きれいに停められました。':wrongHeading?'車の前向きを、点線枠の矢印に合わせましょう。':drag?drivingHint:'点線の車形に合わせて、停めてみましょう';
   if($('status').textContent!==text)$('status').textContent=text;
 }
@@ -340,31 +340,31 @@ function render() {
   }
   ctx.restore();
   ctx.save();
-  const basis=drag?drag.basis:currentControlBasis(bounds);
+  const basis=currentControlBasis(bounds);
   const origin={x:basis.origin.x-bounds.left,y:basis.origin.y-bounds.top};
-  const straightHalfWidth=basis.span*STEERING_DEAD_ZONE,extent=Math.hypot(bounds.width,bounds.height)*2;
+  const straightHalfWidth=basis.span*STEERING_DEAD_ZONE,stopHalfWidth=basis.forwardSpan*ACCEL_DEAD_ZONE,extent=Math.hypot(bounds.width,bounds.height)*2;
   ctx.beginPath();ctx.rect(0,60,bounds.width,bounds.height-153);ctx.clip();
   ctx.translate(origin.x,origin.y);ctx.transform(basis.right.x,basis.right.y,-basis.forward.x,-basis.forward.y,0,0);
   ctx.fillStyle='#6f9b6412';ctx.fillRect(-straightHalfWidth,-extent,straightHalfWidth*2,extent*2);
   ctx.strokeStyle='#74926b70';ctx.lineWidth=.8;ctx.setLineDash([3,6]);ctx.beginPath();
   for(const x of [-straightHalfWidth,straightHalfWidth]){ctx.moveTo(x,-extent);ctx.lineTo(x,extent);}ctx.stroke();
+  ctx.fillStyle='#d2a35020';ctx.fillRect(-extent,-stopHalfWidth,extent*2,stopHalfWidth*2);
+  ctx.strokeStyle='#a5783990';ctx.beginPath();
+  for(const y of [-stopHalfWidth,stopHalfWidth]){ctx.moveTo(-extent,y);ctx.lineTo(extent,y);}ctx.stroke();
   ctx.strokeStyle='#426a5480';ctx.lineWidth=1;ctx.setLineDash([6,6]);
   ctx.beginPath();ctx.moveTo(0,-extent);ctx.lineTo(0,extent);ctx.stroke();ctx.setLineDash([]);
-  if(mode==='map'||overview)line([{x:-7,y:-86},{x:0,y:-100},{x:7,y:-86}],'#55734b',2);
+  line([{x:-7,y:-86},{x:0,y:-100},{x:7,y:-86}],'#55734b',2);
   ctx.restore();ctx.save();
-  if(mode==='map'||overview){
-    const x=origin.x+basis.forward.x*117,y=origin.y+basis.forward.y*117;
-    if(x>20&&x<bounds.width-20&&y>75&&y<bounds.height-110)text('前進',x,y,10,'#55734b');
+  for(const [label,distance,color] of [['前進',117,'#55734b'],['後進',-117,'#8c6534']]){
+    const x=origin.x+basis.forward.x*distance,y=origin.y+basis.forward.y*distance;
+    if(x>20&&x<bounds.width-20&&y>75&&y<bounds.height-110)text(label,x,y,10,color);
   }
-  ctx.fillStyle='#f7f9f0e8';ctx.beginPath();ctx.roundRect(centerX-49,bounds.height-94,98,20,5);ctx.fill();
-  text('直進エリア · 0°',centerX,bounds.height-84,10,'#55734b');ctx.restore();
-  if(drag && Math.hypot(drag.dx,drag.dy)>2) {
-    const x=drag.x-bounds.left,y=drag.y-bounds.top;
-    ctx.save();ctx.strokeStyle='#547c5599';ctx.fillStyle='#547c5518';ctx.lineWidth=1;ctx.setLineDash([4,4]);
-    ctx.beginPath();ctx.arc(x,y,17,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+drag.dx,y+drag.dy);ctx.stroke();ctx.setLineDash([]);
-    ctx.beginPath();ctx.arc(x+drag.dx,y+drag.dy,6,0,Math.PI*2);ctx.fillStyle='#547c55bb';ctx.fill();ctx.restore();
+  ctx.fillStyle='#f7f9f0e8';ctx.beginPath();ctx.roundRect(centerX-105,bounds.height-94,210,20,5);ctx.fill();
+  text('緑の帯：直進　黄の帯：停止',centerX,bounds.height-84,10,'#55734b');ctx.restore();
+  if(drag) {
+    ctx.save();ctx.strokeStyle='#547c55';ctx.fillStyle='#f7f9f0aa';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(drag.x-bounds.left,drag.y-bounds.top,9,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();
   }
 }
-function frame(time){const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;if(activeScreen==='play'){update(dt);render();}requestAnimationFrame(frame);}
+function frame(time){const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;if(activeScreen==='play'){applyPointerInput();update(dt);render();}requestAnimationFrame(frame);}
 reset();applyRoute();requestAnimationFrame(frame);

@@ -1,0 +1,2792 @@
+{
+  "site": "http://127.0.0.1:4173",
+  "recording": false,
+  "started": "2026-11-11T12:26:06.137Z",
+  "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
+  "cases": [
+    {
+      "input": "mouse",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "right-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.896190846831715,
+          "y": 16.807015136346827,
+          "heading": 0.005203615462874908
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -1.5759999422577715,
+          "worldCenter": {
+            "x": 23.896190846831715,
+            "y": 16.807015136346827,
+            "heading": 0.005203615462874908
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0.44444441120089523
+      },
+      "after": {
+        "car": {
+          "x": 23.896190846831715,
+          "y": 16.807015136346827,
+          "heading": 0.005203615462874908
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -1.5759999422577715,
+          "worldCenter": {
+            "x": 23.896190846831715,
+            "y": 16.807015136346827,
+            "heading": 0.005203615462874908
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "down-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.792984863653174,
+          "y": 16.896190846831537,
+          "heading": 1.575999942257769
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -3.1467962690526656,
+          "worldCenter": {
+            "x": 23.792984863653174,
+            "y": 16.896190846831537,
+            "heading": 1.575999942257769
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0.44444441120089523
+      },
+      "after": {
+        "car": {
+          "x": 23.792984863653174,
+          "y": 16.896190846831537,
+          "heading": 1.575999942257769
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -3.1467962690526656,
+          "worldCenter": {
+            "x": 23.792984863653174,
+            "y": 16.896190846831537,
+            "heading": 1.575999942257769
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "left-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.711068688034015,
+          "y": 16.793540216611916,
+          "heading": 3.14639746934499
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -4.717193796139886,
+          "worldCenter": {
+            "x": 23.711068688034015,
+            "y": 16.793540216611916,
+            "heading": 3.14639746934499
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0.44444441120089523
+      },
+      "after": {
+        "car": {
+          "x": 23.711068688034015,
+          "y": 16.793540216611916,
+          "heading": 3.14639746934499
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -4.717193796139886,
+          "worldCenter": {
+            "x": 23.711068688034015,
+            "y": 16.793540216611916,
+            "heading": 3.14639746934499
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "up-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.80645978338807,
+          "y": 16.711126465814534,
+          "heading": -1.5659915110397051
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -0.004804815755191427,
+          "worldCenter": {
+            "x": 23.80645978338807,
+            "y": 16.711126465814534,
+            "heading": -1.5659915110397051
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0.44444441120089523
+      },
+      "after": {
+        "car": {
+          "x": 23.80645978338807,
+          "y": 16.711126465814534,
+          "heading": -1.5659915110397051
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -0.004804815755191427,
+          "worldCenter": {
+            "x": 23.80645978338807,
+            "y": 16.711126465814534,
+            "heading": -1.5659915110397051
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "car",
+      "name": "diagonal-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.858316177112236,
+          "y": 16.86745169038963,
+          "heading": 0.7902029791526424
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -2.360999305947539,
+          "worldCenter": {
+            "x": 23.858316177112236,
+            "y": 16.86745169038963,
+            "heading": 0.7902029791526424
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0.44444441120089523
+      },
+      "after": {
+        "car": {
+          "x": 23.858316177112236,
+          "y": 16.86745169038963,
+          "heading": 0.7902029791526424
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": -2.360999305947539,
+          "worldCenter": {
+            "x": 23.858316177112236,
+            "y": 16.86745169038963,
+            "heading": 0.7902029791526424
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "right-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.88190179340931,
+          "y": 16.806037586062473,
+          "heading": 0.004498542759201611
+        },
+        "mapCenter": {
+          "x": 23.74076960855324,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.74076960855324,
+            "y": 16.799999999999997
+          },
+          "carX": 481.90535184522315,
+          "carY": 407.827493304601
+        },
+        "speed": 0.41041977920323586
+      },
+      "after": {
+        "car": {
+          "x": 23.88190179340931,
+          "y": 16.806037586062473,
+          "heading": 0.004498542759201611
+        },
+        "mapCenter": {
+          "x": 23.88190179340931,
+          "y": 16.806037586062473
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.88190179340931,
+            "y": 16.806037586062473
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "down-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.79400601319933,
+          "y": 16.880942775757322,
+          "heading": 1.5752637679500592
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.740671736333947
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.740671736333947
+          },
+          "carX": 473.9248716250545,
+          "carY": 415.1086412293285
+        },
+        "speed": 0.4051705313087657
+      },
+      "after": {
+        "car": {
+          "x": 23.79400601319933,
+          "y": 16.880942775757322,
+          "heading": 1.5752637679500592
+        },
+        "mapCenter": {
+          "x": 23.79400601319933,
+          "y": 16.880942775757322
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.79400601319933,
+            "y": 16.880942775757322
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "left-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.717818636396373,
+          "y": 16.793962624027408,
+          "heading": 3.1460910445667665
+        },
+        "mapCenter": {
+          "x": 23.85900456721568,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.85900456721568,
+            "y": 16.799999999999997
+          },
+          "carX": 466.5917328434375,
+          "carY": 407.1725180911838
+        },
+        "speed": 0.41040596238223864
+      },
+      "after": {
+        "car": {
+          "x": 23.717818636396373,
+          "y": 16.793962624027408,
+          "heading": 3.1460910445667665
+        },
+        "mapCenter": {
+          "x": 23.717818636396373,
+          "y": 16.793962624027408
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.717818636396373,
+            "y": 16.793962624027408
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "up-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.8059969758938,
+          "y": 16.719070938592125,
+          "heading": -1.5663267255111653
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.859382451389624
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.859382451389624
+          },
+          "carX": 474.57529051060317,
+          "carY": 399.8891633967417
+        },
+        "speed": 0.40517037481525325
+      },
+      "after": {
+        "car": {
+          "x": 23.8059969758938,
+          "y": 16.719070938592125,
+          "heading": -1.5663267255111653
+        },
+        "mapCenter": {
+          "x": 23.8059969758938,
+          "y": 16.719070938592125
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8059969758938,
+            "y": 16.719070938592125
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "mode": "map",
+      "name": "diagonal-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.855036851600204,
+          "y": 16.863768595337547,
+          "heading": 0.7899962444982109
+        },
+        "mapCenter": {
+          "x": 23.758458913340206,
+          "y": 16.758458913340192
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.758458913340206,
+            "y": 16.758458913340192
+          },
+          "carX": 479.48862149955744,
+          "carY": 413.2122524477353
+        },
+        "speed": 0.4212270346268789
+      },
+      "after": {
+        "car": {
+          "x": 23.855036851600204,
+          "y": 16.863768595337547,
+          "heading": 0.7899962444982109
+        },
+        "mapCenter": {
+          "x": 23.855036851600204,
+          "y": 16.863768595337547
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.855036851600204,
+            "y": 16.863768595337547
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "right-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.92073588606641,
+          "y": 16.80814144321152,
+          "heading": 0.006006018065473756
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -1.5768023448603703,
+          "worldCenter": {
+            "x": 23.92073588606641,
+            "y": 16.80814144321152,
+            "heading": 0.006006018065473756
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0.4444444444444444
+      },
+      "after": {
+        "car": {
+          "x": 23.92073588606641,
+          "y": 16.80814144321152,
+          "heading": 0.006006018065473756
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -1.5768023448603703,
+          "worldCenter": {
+            "x": 23.92073588606641,
+            "y": 16.80814144321152,
+            "heading": 0.006006018065473756
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "down-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.791858556788487,
+          "y": 16.920793663849906,
+          "heading": 1.5768023448603685
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -3.147598671655265,
+          "worldCenter": {
+            "x": 23.791858556788487,
+            "y": 16.920793663849906,
+            "heading": 1.5768023448603685
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0.4444444444444444
+      },
+      "after": {
+        "car": {
+          "x": 23.791858556788487,
+          "y": 16.920793663849906,
+          "heading": 1.5768023448603685
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -3.147598671655265,
+          "worldCenter": {
+            "x": 23.791858556788487,
+            "y": 16.920793663849906,
+            "heading": 1.5768023448603685
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "left-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.679277466835778,
+          "y": 16.791855166729505,
+          "heading": 3.1476010740624956
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -4.718397400857392,
+          "worldCenter": {
+            "x": 23.679277466835778,
+            "y": 16.791855166729505,
+            "heading": 3.1476010740624956
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0.4444444444444444
+      },
+      "after": {
+        "car": {
+          "x": 23.679277466835778,
+          "y": 16.791855166729505,
+          "heading": 3.1476010740624956
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -4.718397400857392,
+          "worldCenter": {
+            "x": 23.679277466835778,
+            "y": 16.791855166729505,
+            "heading": 3.1476010740624956
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "up-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.80813805325929,
+          "y": 16.679308538823044,
+          "heading": -1.5647927111366497
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -0.006003615658246808,
+          "worldCenter": {
+            "x": 23.80813805325929,
+            "y": 16.679308538823044,
+            "heading": -1.5647927111366497
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0.4444444444444444
+      },
+      "after": {
+        "car": {
+          "x": 23.80813805325929,
+          "y": 16.679308538823044,
+          "heading": -1.5647927111366497
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -0.006003615658246808,
+          "worldCenter": {
+            "x": 23.80813805325929,
+            "y": 16.679308538823044,
+            "heading": -1.5647927111366497
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-front-position",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-forward-and-right",
+      "gear": "D",
+      "speed": "1.6",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "car",
+      "name": "diagonal-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.879657149129155,
+          "y": 16.891170888536195,
+          "heading": 0.7914041814629236
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -2.3622005082578204,
+          "worldCenter": {
+            "x": 23.879657149129155,
+            "y": 16.891170888536195,
+            "heading": 0.7914041814629236
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0.4444444444444444
+      },
+      "after": {
+        "car": {
+          "x": 23.879657149129155,
+          "y": 16.891170888536195,
+          "heading": 0.7914041814629236
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": -2.3622005082578204,
+          "worldCenter": {
+            "x": 23.879657149129155,
+            "y": 16.891170888536195,
+            "heading": 0.7914041814629236
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-forward-and-right",
+      "gear": "D",
+      "speed": "1.4",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "right-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.904183750287896,
+          "y": 16.807232396285375,
+          "heading": 0.005357071691257911
+        },
+        "mapCenter": {
+          "x": 23.71967786705939,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.71967786705939,
+            "y": 16.799999999999997
+          },
+          "carX": 186.67175581776874,
+          "carY": 234.70272625951438
+        },
+        "speed": 0.38370441352021384
+      },
+      "after": {
+        "car": {
+          "x": 23.904183750287896,
+          "y": 16.807232396285375,
+          "heading": 0.005357071691257911
+        },
+        "mapCenter": {
+          "x": 23.904183750287896,
+          "y": 16.807232396285375
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.904183750287896,
+            "y": 16.807232396285375
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "down-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.7926204418922,
+          "y": 16.90769018134135,
+          "heading": 1.5762571414932005
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.720323432632906
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.720323432632906
+          },
+          "carX": 181.29314875000864,
+          "carY": 239.75194674410037
+        },
+        "speed": 0.3967151508234984
+      },
+      "after": {
+        "car": {
+          "x": 23.7926204418922,
+          "y": 16.90769018134135,
+          "heading": 1.5762571414932005
+        },
+        "mapCenter": {
+          "x": 23.7926204418922,
+          "y": 16.90769018134135
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.7926204418922,
+            "y": 16.90769018134135
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-forward-and-right",
+      "gear": "D",
+      "speed": "1.4",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "left-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.695638396769713,
+          "y": 16.792770802512,
+          "heading": 3.146947441492064
+        },
+        "mapCenter": {
+          "x": 23.880156574318793,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.880156574318793,
+            "y": 16.799999999999997
+          },
+          "carX": 176.32789956870002,
+          "carY": 234.29736340374552
+        },
+        "speed": 0.3837000291749738
+      },
+      "after": {
+        "car": {
+          "x": 23.695638396769713,
+          "y": 16.792770802512,
+          "heading": 3.146947441492064
+        },
+        "mapCenter": {
+          "x": 23.695638396769713,
+          "y": 16.792770802512
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.695638396769713,
+            "y": 16.792770802512
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "up-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.807382493575147,
+          "y": 16.692161047186367,
+          "heading": -1.565333420700002
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.87956744791726
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.87956744791726
+          },
+          "carX": 181.70693353203063,
+          "carY": 229.24694179769466
+        },
+        "speed": 0.3967047050908055
+      },
+      "after": {
+        "car": {
+          "x": 23.807382493575147,
+          "y": 16.692161047186367,
+          "heading": -1.565333420700002
+        },
+        "mapCenter": {
+          "x": 23.807382493575147,
+          "y": 16.692161047186367
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.807382493575147,
+            "y": 16.692161047186367
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-press-center-stays-stopped",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-front-position",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-rear-position",
+      "gear": "R",
+      "speed": "2.1",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-stopped-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-stopped-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-10°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-intersection-stops-and-straightens",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-rear-press-reverses-without-drag",
+      "gear": "R",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-front-press-drives-without-drag",
+      "gear": "D",
+      "speed": "2.0",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-forward-and-right",
+      "gear": "D",
+      "speed": "1.5",
+      "tire": "8°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "mode": "map",
+      "name": "diagonal-release-stops-and-centers",
+      "before": {
+        "car": {
+          "x": 23.87291228075945,
+          "y": 16.8836447185286,
+          "heading": 0.7910102497069446
+        },
+        "mapCenter": {
+          "x": 23.744086835240285,
+          "y": 16.744086835240275
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.744086835240285,
+            "y": 16.744086835240275
+          },
+          "carX": 185.111016275916,
+          "carY": 238.41184975883945
+        },
+        "speed": 0.4088072123129872
+      },
+      "after": {
+        "car": {
+          "x": 23.87291228075945,
+          "y": 16.8836447185286,
+          "heading": 0.7910102497069446
+        },
+        "mapCenter": {
+          "x": 23.87291228075945,
+          "y": 16.8836447185286
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.87291228075945,
+            "y": 16.8836447185286
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        },
+        "speed": 0
+      },
+      "passed": true
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.47",
+    "revision": "@1d17a2e2ee147bb7d6ae2ab6abdb3a2510c17775",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.19"
+  },
+  "finished": "2026-11-11T12:26:40.409Z"
+}

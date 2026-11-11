@@ -1,8 +1,7 @@
 export const CAR = { length: 4.4, width: 1.8, wheelbase: 2.6, maxSteer: Math.PI / 5, maxWheel: Math.PI * 3, rearOffset: 1.3 };
 // Each side of the center occupies 5% of the play area's width.
 export const STEERING_DEAD_ZONE = .05;
-export const CREEP_SPEED = .3; // m/s, about 1.1 km/h while held without vertical dragging.
-export const ACCEL_DRAG_THRESHOLD = 4; // Pixels along the forward axis; ignore small touch jitter.
+export const ACCEL_DEAD_ZONE = .05; // Each side of the car center along the forward axis.
 export const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 export function advance(car, speed, wheel, dt) {
   const steer = wheel / CAR.maxWheel * CAR.maxSteer;
@@ -32,23 +31,22 @@ export function overlaps(a, b) {
   }
   return true;
 }
-export function dragInput(x, dy, viewportWidth, sensitivity=100) {
-  const left=viewportWidth*(.5-STEERING_DEAD_ZONE),right=viewportWidth*(.5+STEERING_DEAD_ZONE);
-  let steering=0;
-  if(x<left)steering=(x-left)/left;
-  else if(x>right)steering=(x-right)/(viewportWidth-right);
-  return { wheel: clamp(steering,-1,1)*CAR.maxWheel, speed: clamp(-dy / sensitivity, -1, 1) * 2 };
-}
-
 export function createControlBasis(origin, heading, width, height) {
   const clean=value=>Math.abs(value)<1e-12?0:value;
   const forward={x:clean(Math.cos(heading)),y:clean(Math.sin(heading))};
   const right={x:-forward.y,y:forward.x};
-  return {origin:{...origin},forward,right,span:Math.abs(right.x)*width+Math.abs(right.y)*height};
+  return {origin:{...origin},forward,right,span:Math.abs(right.x)*width+Math.abs(right.y)*height,forwardSpan:Math.abs(forward.x)*width+Math.abs(forward.y)*height};
 }
 
-export function pointerInput(point, start, basis) {
-  const lateral=(point.x-basis.origin.x)*basis.right.x+(point.y-basis.origin.y)*basis.right.y;
-  const forwardDrag=(point.x-start.x)*basis.forward.x+(point.y-start.y)*basis.forward.y;
-  return {...dragInput(basis.span/2+lateral,-forwardDrag,basis.span),forwardDrag};
+function axisInput(distance, span, deadZone) {
+  const edge=span*deadZone;
+  if(Math.abs(distance)<=edge+1e-9)return 0;
+  return Math.sign(distance)*clamp((Math.abs(distance)-edge)/(span/2-edge),0,1);
+}
+
+export function pointerInput(point, basis) {
+  const dx=point.x-basis.origin.x,dy=point.y-basis.origin.y;
+  const lateral=dx*basis.right.x+dy*basis.right.y;
+  const forward=dx*basis.forward.x+dy*basis.forward.y;
+  return {wheel:axisInput(lateral,basis.span,STEERING_DEAD_ZONE)*CAR.maxWheel,speed:axisInput(forward,basis.forwardSpan,ACCEL_DEAD_ZONE)*2};
 }

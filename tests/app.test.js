@@ -35,9 +35,9 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   element('layout-defaults').onclick();
   events.pointerdown(pointer());assert.equal(read('drag'),null);
   await element('sound-start').onclick();assert.equal(read('audioReady'),true);assert.equal(audio.oscillators().length,6);
-  events.pointerdown(pointer());assert.equal(read('speed'),physics.CREEP_SPEED);assert.equal(read('wheel'),0);
-  events.pointermove(pointer(320,150));assert.equal(read('speed'),1);assert.ok(Math.abs(read('wheel')-4*Math.PI/3)<1e-8);
-  events.pointermove(pointer(235,150));assert.equal(read('wheel'),0);assert.equal(read('speed'),1);
+  events.pointerdown(pointer());assert.ok(read('speed')>0);assert.equal(read('wheel'),0);
+  events.pointermove(pointer(320,150));assert.ok(read('speed')>0);assert.ok(Math.abs(read('wheel')-4*Math.PI/3)<1e-8);
+  events.pointermove(pointer(235,150));assert.equal(read('wheel'),0);assert.ok(read('speed')>0);
   await events.pointerup(pointer());assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
   events.pointerdown(pointer());windowEvents.blur();assert.equal(read('drag'),null);
   events.pointerdown(pointer(20,20,true));assert.equal(read('drag'),null);
@@ -56,22 +56,25 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   element('overview').onclick();assert.equal(read('overview'),true);assert.equal(element('overview').attributes['aria-pressed'],'true');
 });
 
-test('holding without a vertical drag creeps, preserves absolute steering, and stops on release',async()=>{
+test('absolute press positions control both modes immediately, change while held, and stop on release',async()=>{
   const {element,events,read,pointer}=setup();await element('sound-start').onclick();
-  const before=read('({...car})');
-  events.pointerdown(pointer());read('update(1)');
-  assert.ok(Math.abs(read('car.x')-(before.x-physics.CREEP_SPEED))<1e-8);
-  assert.equal(read('car.y'),before.y);assert.equal(read('wheel'),0);
-  events.pointermove(pointer(320,200));
-  assert.equal(read('speed'),physics.CREEP_SPEED);assert.ok(read('wheel')>0);
-  events.pointermove(pointer(220,202));assert.equal(read('speed'),physics.CREEP_SPEED);assert.equal(read('wheel'),0);
-  events.pointermove(pointer(220,150));assert.equal(read('speed'),1);
-  events.pointermove(pointer());assert.ok(read('speed')===0,'returning to the origin after vertical dragging still stops');
-  events.pointermove(pointer(220,250));assert.equal(read('speed'),-1);
-  await events.pointerup(pointer());assert.equal(read('speed'),0);
-  const stopped=read('({...car})');read('update(1)');assert.equal(read('car.x'),stopped.x);assert.equal(read('car.y'),stopped.y);
-  events.pointerdown(pointer());assert.equal(read('speed'),physics.CREEP_SPEED,'a fresh press starts creeping again');
-  await events.pointercancel(pointer());assert.equal(read('speed'),0);
+  for(const mode of ['car','map']){
+    element('reset').onclick();element(`${mode}-mode`).onclick();
+    const basis=read('currentControlBasis(canvas.getBoundingClientRect())');
+    const point=(f,r)=>pointer(basis.origin.x+basis.forward.x*f+basis.right.x*r,basis.origin.y+basis.forward.y*f+basis.right.y*r);
+    const before=read('({...car})');
+    events.pointerdown(point(0,0));assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
+    read('applyPointerInput();update(.2)');assert.equal(read('car.x'),before.x);assert.equal(read('car.y'),before.y);
+    events.pointermove(point(0,basis.span*.25));assert.equal(read('speed'),0);assert.ok(read('wheel')>0);
+    events.pointermove(point(basis.forwardSpan*.275,0));assert.ok(Math.abs(read('speed')-1)<1e-8);assert.equal(read('wheel'),0);
+    events.pointermove(point(-basis.forwardSpan*.275,0));assert.ok(Math.abs(read('speed')+1)<1e-8);
+    events.pointermove(point(0,0));assert.equal(read('speed'),0);assert.equal(read('wheel'),0);
+    await events.pointerup(point(0,0));assert.equal(read('speed'),0);
+    events.pointerdown(point(-basis.forwardSpan*.275,0));assert.ok(read('speed')<0,'pressing behind immediately reverses');
+    await events.pointercancel(point(0,0));assert.equal(read('speed'),0);
+    events.pointerdown(point(basis.forwardSpan*.275,0));assert.ok(read('speed')>0,'pressing ahead immediately drives forward');
+    await events.pointerup(point(0,0));assert.equal(read('speed'),0);
+  }
 });
 
 test('thumbnail selection opens play, returning stops the car, and unknown maps show an error',()=>{
@@ -88,19 +91,17 @@ test('thumbnail selection opens play, returning stops the car, and unknown maps 
   assert.equal(element('route-error').hidden,false);assert.match(element('route-error').textContent,/見つかりません/);
 });
 
-test('fixed-map gestures use the car direction at press time and preserve that basis through a turn',async()=>{
-  const {element,events,read,pointer}=setup();await element('sound-start').onclick();
+test('held positions follow the current car center and orientation without another pointer event',async()=>{
+  const {element,events,read,pointer}=setup();await element('sound-start').onclick();element('map-mode').onclick();
   for(const heading of [0,Math.PI/2,Math.PI,-Math.PI/2,Math.PI/4]){
     read(`car={...layout.start,heading:${heading}}`);element('map-mode').onclick();
     const basis=read('currentControlBasis(canvas.getBoundingClientRect())');
-    const point=(forward,right)=>pointer(basis.origin.x+basis.forward.x*forward+basis.right.x*right,basis.origin.y+basis.forward.y*forward+basis.right.y*right);
-    events.pointerdown(point(0,0));assert.equal(read('speed'),physics.CREEP_SPEED);assert.equal(read('wheel'),0);
-    events.pointermove(point(50,0));assert.ok(Math.abs(read('speed')-1)<1e-8);assert.ok(Math.abs(read('wheel'))<1e-8);
-    events.pointermove(point(-50,0));assert.ok(Math.abs(read('speed')+1)<1e-8);
-    events.pointermove(point(0,basis.span*.25));assert.ok(read('wheel')>0);
-    read('car.heading+=Math.PI/3');events.pointermove(point(50,0));
-    assert.ok(Math.abs(read('speed')-1)<1e-8);assert.ok(Math.abs(read('wheel'))<1e-8,'turning must not rotate an active gesture');
-    await events.pointerup(point(50,0));assert.equal(read('speed'),0);
+    const point=pointer(basis.origin.x+basis.forward.x*basis.forwardSpan*.275,basis.origin.y+basis.forward.y*basis.forwardSpan*.275);
+    events.pointerdown(point);assert.ok(Math.abs(read('speed')-1)<1e-8);assert.ok(Math.abs(read('wheel'))<1e-8);
+    read('car.heading+=Math.PI;applyPointerInput()');assert.ok(Math.abs(read('speed')+1)<1e-8,'a turn changes the relative front/rear of a held point');
+    read(`car.heading=${heading};car.x+=Math.cos(car.heading)*.5;car.y+=Math.sin(car.heading)*.5;applyPointerInput()`);
+    assert.ok(read('speed')<1&&read('speed')>0,'approaching the held point reduces the throttle');
+    await events.pointerup(point);assert.equal(read('speed'),0);
   }
 });
 

@@ -1,34 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CAR, STEERING_DEAD_ZONE, advance, corners, overlaps, dragInput, createControlBasis, pointerInput } from '../dist/physics.js';
+import { CAR, STEERING_DEAD_ZONE, ACCEL_DEAD_ZONE, advance, corners, overlaps, createControlBasis, pointerInput } from '../dist/physics.js';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
-test('absolute steering and vertical drag input preserve their mappings',()=>{
-  near(dragInput(200,0,400).wheel,0);
-  near(dragInput(0,0,400).wheel,-CAR.maxWheel);
-  near(dragInput(400,0,400).wheel,CAR.maxWheel);
-  near(dragInput(100,0,400).wheel,-CAR.maxWheel*4/9);
-  near(dragInput(300,0,400).wheel,CAR.maxWheel*4/9);
-  near(dragInput(400,0,400).speed,0);
-  near(dragInput(100,0,200).wheel,0);
-});
-test('the full center band and its boundaries keep wheels exactly straight on every screen width',()=>{
-  for(const width of [320,393,400,1280]){
-    const left=width*(.5-STEERING_DEAD_ZONE),right=width*(.5+STEERING_DEAD_ZONE);
-    for(const x of [left,(left+right)/2,right])assert.equal(dragInput(x,-50,width).wheel,0);
-    near(dragInput(left,-50,width).speed,1);
-    assert.ok(dragInput(left-.01,0,width).wheel<0);
-    assert.ok(dragInput(right+.01,0,width).wheel>0);
-    assert.ok(Math.abs(dragInput(left-.0001,0,width).wheel)<.0001);
-    assert.ok(Math.abs(dragInput(right+.0001,0,width).wheel)<.0001);
-    near(dragInput(0,0,width).wheel,-CAR.maxWheel);near(dragInput(width,0,width).wheel,CAR.maxWheel);
-  }
-});
-test('vertical drag preserves proportional speed, with bounded steering and speed',()=>{
-  near(dragInput(200,-50,400).speed,1);near(dragInput(200,50,400).speed,-1);
-  near(dragInput(1000,-1000,400).wheel,CAR.maxWheel);
-  near(dragInput(-1000,1000,400).wheel,-CAR.maxWheel);
-  near(dragInput(200,-1000,400).speed,2);near(dragInput(200,1000,400).speed,-2);
-});
 test('distance integrates velocity and preserves direction with straight tires',()=>{
   const p={x:0,y:0,heading:0};const q=advance(p,2,0,3);
   near(q.x,6);near(q.y,0);near(q.heading,0);
@@ -51,15 +24,24 @@ test('oriented collision detects overlapping and separated cars',()=>{
   assert.ok(!overlaps(a,corners({x:10,y:0,heading:0})));
 });
 
-test('car-relative control axes work facing up, right, down, left, and diagonally',()=>{
-  for(const heading of [-Math.PI/2,0,Math.PI/2,Math.PI,Math.PI/4]){
-    const origin={x:200,y:300},basis=createControlBasis(origin,heading,400,600);
+test('absolute car-relative positions have independent stop and straight bands in every orientation',()=>{
+  for(const [width,height] of [[320,600],[393,852],[1280,600]])for(const heading of [-Math.PI/2,0,Math.PI/2,Math.PI,Math.PI/4]){
+    const origin={x:width/2,y:height/2},basis=createControlBasis(origin,heading,width,height);
     const point=(forward,right)=>({x:origin.x+basis.forward.x*forward+basis.right.x*right,y:origin.y+basis.forward.y*forward+basis.right.y*right});
-    near(pointerInput(point(50,0),origin,basis).speed,1);
-    near(pointerInput(point(-50,0),origin,basis).speed,-1);
-    near(pointerInput(point(50,0),origin,basis).wheel,0);
-    near(pointerInput(point(0,basis.span/2),origin,basis).wheel,CAR.maxWheel);
-    near(pointerInput(point(0,-basis.span/2),origin,basis).wheel,-CAR.maxWheel);
-    for(const offset of [-1,0,1])near(pointerInput(point(50,offset*basis.span*STEERING_DEAD_ZONE),origin,basis).wheel,0);
+    const input=(f,r)=>pointerInput(point(f,r),basis);
+    for(const offset of [-1,0,1]){
+      assert.equal(input(offset*basis.forwardSpan*ACCEL_DEAD_ZONE,0).speed,0);
+      assert.equal(input(0,offset*basis.span*STEERING_DEAD_ZONE).wheel,0);
+    }
+    near(input(basis.forwardSpan/2,0).speed,2);near(input(-basis.forwardSpan/2,0).speed,-2);
+    near(input(0,basis.span/2).wheel,CAR.maxWheel);near(input(0,-basis.span/2).wheel,-CAR.maxWheel);
+    near(input(basis.forwardSpan*.275,basis.span*.275).speed,1);
+    near(input(basis.forwardSpan*.275,basis.span*.275).wheel,CAR.maxWheel/2);
+    assert.ok(input(basis.forwardSpan*ACCEL_DEAD_ZONE+.01,0).speed>0);
+    assert.ok(input(-basis.forwardSpan*ACCEL_DEAD_ZONE-.01,0).speed<0);
+    assert.ok(input(basis.forwardSpan*ACCEL_DEAD_ZONE+.0001,0).speed<.00001);
+    near(input(basis.forwardSpan*5,-basis.span*5).speed,2);
+    near(input(-basis.forwardSpan*5,basis.span*5).speed,-2);
+    assert.equal(input(0,basis.span*.4).speed,0,'steering alone must not creep');
   }
 });
