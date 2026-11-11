@@ -24,7 +24,11 @@ function reset() {
   contactPosition=null;successCelebrated=false;gestureVersion++;
   syncScenario();updateReadout();
 }
-function stop() {speed=0;drag=null;gestureVersion++;}
+function stop() {
+  const wasDragging=Boolean(drag);
+  speed=0;drag=null;gestureVersion++;
+  if(wasDragging&&mode==='map')mapCenter={x:car.x,y:car.y};
+}
 function setMode(next) {
   stop();mode=next;overview=false;mapCenter={x:car.x,y:car.y};
   for(const [id,value] of [['map-mode','map'],['car-mode','car']]) {
@@ -80,7 +84,6 @@ window.addEventListener('hashchange',applyRoute);
 $('overview').onclick=()=>{stop();overview=!overview;syncScenario();};
 $('map-mode').onclick=()=>setMode('map');$('car-mode').onclick=()=>setMode('car');
 $('reset').onclick=reset;$('center').onclick=()=>{stop();wheel=0;};
-$('recenter').onclick=()=>{stop();overview=false;mapCenter={x:car.x,y:car.y};syncScenario();};
 $('help').onclick=()=>{stop();$('help-dialog').showModal();};
 async function playEffect(kind, label=kind==='success'?'成功音':'衝突音') {
   const played=await collisionSound.play(kind);

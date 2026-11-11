@@ -104,6 +104,24 @@ test('fixed-map gestures use the car direction at press time and preserve that b
   }
 });
 
+test('ending a fixed-map gesture centers only the camera and preserves the car pose and north-up direction',async()=>{
+  const {element,events,read,pointer}=setup();await element('sound-start').onclick();element('map-mode').onclick();
+  const original=read('({...mapCenter})'),basis=read('currentControlBasis(canvas.getBoundingClientRect())');
+  events.pointerdown(pointer(basis.origin.x,basis.origin.y));read('speed=1;update(.5)');
+  assert.equal(read('mapCenter.x'),original.x,'the map stays fixed during a gesture');
+  const pose=read('({...car})');assert.ok(Math.abs(pose.x-original.x)>.1);
+  await events.pointerup(pointer());
+  assert.equal(read('car.x'),pose.x);assert.equal(read('car.y'),pose.y);assert.equal(read('car.heading'),pose.heading);
+  assert.equal(read('mapCenter.x'),pose.x);assert.equal(read('mapCenter.y'),pose.y);
+  const view=read('cameraView(canvas.getBoundingClientRect())');
+  assert.equal(view.rotation,0);assert.equal(view.carX,view.centerX);assert.equal(view.carY,view.centerY);
+  const next=read('currentControlBasis(canvas.getBoundingClientRect())');
+  assert.equal(next.origin.x,220);assert.equal(next.origin.y,299.5);
+  element('overview').onclick();events.pointerdown(pointer());read('car.x-=.2');await events.pointerup(pointer());
+  assert.equal(read('overview'),true,'full-map overview remains an overview');
+  element('overview').onclick();assert.equal(read('mapCenter.x'),read('car.x'));
+});
+
 test('collision audio survives suspension, sounds while held, and rearms on a new drag',async()=>{
   const {element,events,audio,read,pointer}=setup();await element('sound-start').onclick();
   const context=audio.contexts[0];context.state='suspended';

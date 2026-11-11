@@ -1,7 +1,7 @@
 {
   "site": "http://127.0.0.1:4173",
   "recording": false,
-  "started": "2026-11-11T11:05:28.786Z",
+  "started": "2026-11-11T12:20:47.360Z",
   "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
   "cases": [
     {
@@ -74,6 +74,57 @@
     },
     {
       "input": "mouse",
+      "name": "right-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.999899999999986,
+          "y": 16.799999999999997,
+          "heading": 0
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 485.0930606060598,
+          "carY": 407.5
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.999899999999986,
+          "y": 16.799999999999997,
+          "heading": 0
+        },
+        "mapCenter": {
+          "x": 23.999899999999986,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.999899999999986,
+            "y": 16.799999999999997
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        }
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "down-forward",
       "gear": "D",
       "speed": "3.6",
@@ -110,6 +161,57 @@
       "gear": "D",
       "speed": "3.6",
       "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "down-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.8,
+          "y": 16.999999999999954,
+          "heading": 1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 474.25,
+          "carY": 418.3484848484825
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.8,
+          "y": 16.999999999999954,
+          "heading": 1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.999999999999954
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.999999999999954
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        }
+      },
       "passed": true
     },
     {
@@ -154,6 +256,57 @@
     },
     {
       "input": "mouse",
+      "name": "left-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.59990000000001,
+          "y": 16.799999999999997,
+          "heading": 3.141592653589793
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 463.39609090909136,
+          "carY": 407.5
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.59990000000001,
+          "y": 16.799999999999997,
+          "heading": 3.141592653589793
+        },
+        "mapCenter": {
+          "x": 23.59990000000001,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.59990000000001,
+            "y": 16.799999999999997
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        }
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "up-forward",
       "gear": "D",
       "speed": "3.6",
@@ -194,6 +347,57 @@
     },
     {
       "input": "mouse",
+      "name": "up-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.8,
+          "y": 16.599800000000002,
+          "heading": -1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 474.25,
+          "carY": 396.6406666666669
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.8,
+          "y": 16.599800000000002,
+          "heading": -1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.599800000000002
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.599800000000002
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        }
+      },
+      "passed": true
+    },
+    {
+      "input": "mouse",
       "name": "diagonal-forward",
       "gear": "D",
       "speed": "3.6",
@@ -230,6 +434,57 @@
       "gear": "D",
       "speed": "3.6",
       "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "diagonal-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.941350676025383,
+          "y": 16.94135067602538,
+          "heading": 0.7853981633974483
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 481.91720333592224,
+          "carY": 415.16720333592224
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.941350676025383,
+          "y": 16.94135067602538,
+          "heading": 0.7853981633974483
+        },
+        "mapCenter": {
+          "x": 23.941350676025383,
+          "y": 16.94135067602538
+        },
+        "view": {
+          "scale": 54.242424242424235,
+          "centerX": 474.25,
+          "centerY": 407.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.941350676025383,
+            "y": 16.94135067602538
+          },
+          "carX": 474.25,
+          "carY": 407.5
+        }
+      },
       "passed": true
     },
     {
@@ -302,6 +557,57 @@
     },
     {
       "input": "touch",
+      "name": "right-release-centers-car",
+      "before": {
+        "car": {
+          "x": 24.065099999999987,
+          "y": 16.799999999999997,
+          "heading": 0
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 188.93083333333294,
+          "carY": 234.5
+        }
+      },
+      "after": {
+        "car": {
+          "x": 24.065099999999987,
+          "y": 16.799999999999997,
+          "heading": 0
+        },
+        "mapCenter": {
+          "x": 24.065099999999987,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 24.065099999999987,
+            "y": 16.799999999999997
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        }
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "down-forward",
       "gear": "D",
       "speed": "3.6",
@@ -338,6 +644,57 @@
       "gear": "D",
       "speed": "3.6",
       "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "down-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.8,
+          "y": 17.06479999999994,
+          "heading": 1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 181.5,
+          "carY": 241.92242424242266
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.8,
+          "y": 17.06479999999994,
+          "heading": 1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 17.06479999999994
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 17.06479999999994
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        }
+      },
       "passed": true
     },
     {
@@ -382,6 +739,57 @@
     },
     {
       "input": "touch",
+      "name": "left-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.5181,
+          "y": 16.799999999999997,
+          "heading": 3.141592653589793
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 173.59825757575757,
+          "carY": 234.5
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.5181,
+          "y": 16.799999999999997,
+          "heading": 3.141592653589793
+        },
+        "mapCenter": {
+          "x": 23.5181,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.5181,
+            "y": 16.799999999999997
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        }
+      },
+      "passed": true
+    },
+    {
+      "input": "touch",
       "name": "up-forward",
       "gear": "D",
       "speed": "3.6",
@@ -418,6 +826,57 @@
       "gear": "D",
       "speed": "3.6",
       "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "up-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.8,
+          "y": 16.535000000000004,
+          "heading": -1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 181.5,
+          "carY": 227.0719696969699
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.8,
+          "y": 16.535000000000004,
+          "heading": -1.5707963267948966
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.535000000000004
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.535000000000004
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        }
+      },
       "passed": true
     },
     {
@@ -459,6 +918,57 @@
       "speed": "3.6",
       "tire": "0°",
       "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "diagonal-release-centers-car",
+      "before": {
+        "car": {
+          "x": 23.987383315097137,
+          "y": 16.98738330935899,
+          "heading": 0.7853981607512187
+        },
+        "mapCenter": {
+          "x": 23.8,
+          "y": 16.799999999999997
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.8,
+            "y": 16.799999999999997
+          },
+          "carX": 186.7524111049955,
+          "carY": 239.75241094415358
+        }
+      },
+      "after": {
+        "car": {
+          "x": 23.987383315097137,
+          "y": 16.98738330935899,
+          "heading": 0.7853981607512187
+        },
+        "mapCenter": {
+          "x": 23.987383315097137,
+          "y": 16.98738330935899
+        },
+        "view": {
+          "scale": 28.030303030303028,
+          "centerX": 181.5,
+          "centerY": 234.5,
+          "rotation": 0,
+          "worldCenter": {
+            "x": 23.987383315097137,
+            "y": 16.98738330935899
+          },
+          "carX": 181.5,
+          "carY": 234.5
+        }
+      },
+      "passed": true
     }
   ],
   "browser": {
@@ -468,5 +978,5 @@
     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "jsVersion": "15.6.75.19"
   },
-  "finished": "2026-11-11T11:05:43.049Z"
+  "finished": "2026-11-11T12:21:02.368Z"
 }

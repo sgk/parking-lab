@@ -27,7 +27,7 @@
         <canvas id="scene" aria-label="真上から見た駐車場。横位置でハンドル角度を決め、上下にドラッグして運転します。" tabindex="0"></canvas>
         <div id="sound-gate" class="sound-gate"><div class="sound-start-card"><span class="eyebrow">READY TO PRACTICE</span><h2>音と一緒に、練習しよう。</h2><p>接触音はドラッグ中にすぐ鳴ります。<br>成功の音は、指を離して停めたあとに。</p><button id="sound-start" type="button" class="button primary">♪ 音を有効にして練習</button><p id="sound-start-status" role="status"></p></div></div>
         <div class="scene-key"><span class="target-key"></span> 目標の駐車スペース <span class="trail-key"></span> 後輪の軌跡 <span class="destination-key"></span><span id="target-distance">目的地まで</span></div>
-        <div class="scene-bottom"><span id="status" role="status" aria-live="polite">好きな場所からドラッグして、スタート</span><div class="scene-actions"><button id="recenter" class="button">車の位置へ</button><button id="reset" class="button reset">↺ <span>最初から</span></button></div></div>
+        <div class="scene-bottom"><span id="status" role="status" aria-live="polite">好きな場所からドラッグして、スタート</span><div class="scene-actions"><button id="reset" class="button reset">↺ <span>最初から</span></button></div></div>
       </div>
       <aside class="dashboard">
         <div class="panel-title">いまの車の状態 <span>LIVE</span></div>
@@ -62,6 +62,6 @@
     </div>
     <footer><span>焦らず、何度でも。</span><span>学習用の簡易モデルです。実車の運転は指導者のもとで行ってください。</span></footer>
   </main>
-  <dialog id="help-dialog"><form method="dialog"><button class="close button" aria-label="閉じる">×</button><div class="eyebrow">HOW TO PLAY</div><h2>どこからでも、ドラッグ。</h2><p>練習画面の好きな場所を押すと、押している間だけ約1.1km/hでゆっくり前進します。左右の位置でハンドル角度、押した位置からの前後のドラッグ量で速度を操作します。</p><p><b>自車固定の前後：</b>上下にドラッグすると速度操作に切り替わります。上で前進、下で後進。ドラッグ後に開始位置へ戻すと停止します。</p><p><b>地図固定：</b>車の前へドラッグすると前進、後ろへドラッグすると後進します。ステアリングも車の中心から見た左右の位置が基準です。押した瞬間の車の位置と向きを、その操作中は固定して使います。押し直すと新しい基準になります。直進エリアと「前進」の矢印も、この向きに合わせます。全体図でも同じです。</p><p><b>自車固定の左右：</b>中央線の左右それぞれ画面幅の5％以内は直進です。色の付いた直進エリアの外側で、左なら左へ、右なら右へ切れます。左右の端でハンドル1.5回転、前輪は最大36°です。横位置を押すだけでも角度を変更できます。</p><p><b>離す：</b>即停止し、ハンドル角度は保持します。次に押した位置で角度が決まります。「ハンドルをまっすぐに」で戻せます。</p><p><b>目標：</b>緑のスペース中央の点線の車形に合わせ、ほぼ同じ位置と向きで停止すると成功です。向き自由の練習では前向き・後ろ向きのどちらも成功です。指定がある練習では、点線枠の矢印と車の前向きを合わせてください。接触すると止まります。逆方向のドラッグで離れられます。</p><p>拡大表示で車が画面外へ出たら「車の位置へ」で表示を戻せます。「全体図を見る」で駐車場の形と目標を確認できます。速度は前後方向のドラッグ量に比例し、最大7.2km/h。車を固定すると、車の位置と向きを固定して地図が動きます。</p><button class="button primary">練習をはじめる →</button></form></dialog>
-  <script type="module" src="app.js?v=car-relative-1"></script>
+  <dialog id="help-dialog"><form method="dialog"><button class="close button" aria-label="閉じる">×</button><div class="eyebrow">HOW TO PLAY</div><h2>どこからでも、ドラッグ。</h2><p>練習画面の好きな場所を押すと、押している間だけ約1.1km/hでゆっくり前進します。左右の位置でハンドル角度、押した位置からの前後のドラッグ量で速度を操作します。</p><p><b>自車固定の前後：</b>上下にドラッグすると速度操作に切り替わります。上で前進、下で後進。ドラッグ後に開始位置へ戻すと停止します。</p><p><b>地図固定：</b>車の前へドラッグすると前進、後ろへドラッグすると後進します。ステアリングも車の中心から見た左右の位置が基準です。押した瞬間の車の位置と向きを、その操作中は固定して使います。指を離すたびに、車と地図の向きを保ったまま自車が中央に戻ります。押し直すと新しい基準になります。直進エリアと「前進」の矢印も、この向きに合わせます。全体図でも同じです。</p><p><b>自車固定の左右：</b>中央線の左右それぞれ画面幅の5％以内は直進です。色の付いた直進エリアの外側で、左なら左へ、右なら右へ切れます。左右の端でハンドル1.5回転、前輪は最大36°です。横位置を押すだけでも角度を変更できます。</p><p><b>離す：</b>即停止し、ハンドル角度は保持します。次に押した位置で角度が決まります。「ハンドルをまっすぐに」で戻せます。</p><p><b>目標：</b>緑のスペース中央の点線の車形に合わせ、ほぼ同じ位置と向きで停止すると成功です。向き自由の練習では前向き・後ろ向きのどちらも成功です。指定がある練習では、点線枠の矢印と車の前向きを合わせてください。接触すると止まります。逆方向のドラッグで離れられます。</p><p>地図固定では操作を離すと自車が画面中央に戻ります。全体図は全体表示を優先し、閉じると自車中心に戻ります。「全体図を見る」で駐車場の形と目標を確認できます。速度は前後方向のドラッグ量に比例し、最大7.2km/h。車を固定すると、車の位置と向きを固定して地図が動きます。</p><button class="button primary">練習をはじめる →</button></form></dialog>
+  <script type="module" src="app.js?v=auto-center-1"></script>
 </body></html>

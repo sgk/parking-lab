@@ -143,7 +143,17 @@ try {
         await check('left-steering',point(0,-span*.2),null,-1);
         await check('straight-band',point(50,span*.04),'D',0);
         await send('Page.captureScreenshot',{format:'png'},s).then(r=>fs.writeFile(path.join(output,`${input}-relative-${label}.png`),Buffer.from(r.data,'base64')));
-        await up(point(50,span*.04));
+        const stopLine=source.slice(0,source.indexOf("  stop();\n  if(event!=='pointerup')return;")).split('\n').length-1;
+        const stopBreakpoint=await send('Debugger.setBreakpointByUrl',{urlRegex:'/app\\.js',lineNumber:stopLine},s);
+        const stopping=once('Debugger.paused',s),releasing=up(point(50,span*.04));
+        const beforePause=await stopping;
+        const readPose=async pause=>(await send('Debugger.evaluateOnCallFrame',{callFrameId:pause.callFrames[0].callFrameId,expression:'({car:{...car},mapCenter:{...mapCenter},view:cameraView(canvas.getBoundingClientRect())})',returnByValue:true},s)).result.value;
+        const before=await readPose(beforePause);
+        const stepping=once('Debugger.paused',s);await send('Debugger.stepOver',{},s);const after=await readPose(await stepping);
+        const passed=before.car.x===after.car.x&&before.car.y===after.car.y&&before.car.heading===after.car.heading&&after.mapCenter.x===after.car.x&&after.mapCenter.y===after.car.y&&after.view.rotation===0&&Math.abs(after.view.carX-after.view.centerX)<.001&&Math.abs(after.view.carY-after.view.centerY)<.001;
+        results.cases.push({input,name:`${label}-release-centers-car`,before,after,passed});
+        await send('Debugger.removeBreakpoint',{breakpointId:stopBreakpoint.breakpointId},s);await send('Debugger.resume',{},s);await releasing;
+        if(!passed)throw Error(`${input}/${label}: release did not recenter without changing pose`);
       }
       await evaluate("document.querySelector('#car-mode').click()");const position=await rect('#scene');await down(position);
       await move({x:position.x,y:position.y-50});await wait(100);
