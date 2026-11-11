@@ -2,7 +2,7 @@ export const CAR = { length: 4.4, width: 1.8, wheelbase: 2.6, maxSteer: Math.PI 
 // Each side of the center occupies 5% of the play area's width.
 export const STEERING_DEAD_ZONE = .05;
 export const CREEP_SPEED = .3; // m/s, about 1.1 km/h while held without vertical dragging.
-export const VERTICAL_DRAG_THRESHOLD = 4; // Ignore small touch jitter before speed control starts.
+export const ACCEL_DRAG_THRESHOLD = 4; // Pixels along the forward axis; ignore small touch jitter.
 export const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 export function advance(car, speed, wheel, dt) {
   const steer = wheel / CAR.maxWheel * CAR.maxSteer;
@@ -38,4 +38,17 @@ export function dragInput(x, dy, viewportWidth, sensitivity=100) {
   if(x<left)steering=(x-left)/left;
   else if(x>right)steering=(x-right)/(viewportWidth-right);
   return { wheel: clamp(steering,-1,1)*CAR.maxWheel, speed: clamp(-dy / sensitivity, -1, 1) * 2 };
+}
+
+export function createControlBasis(origin, heading, width, height) {
+  const clean=value=>Math.abs(value)<1e-12?0:value;
+  const forward={x:clean(Math.cos(heading)),y:clean(Math.sin(heading))};
+  const right={x:-forward.y,y:forward.x};
+  return {origin:{...origin},forward,right,span:Math.abs(right.x)*width+Math.abs(right.y)*height};
+}
+
+export function pointerInput(point, start, basis) {
+  const lateral=(point.x-basis.origin.x)*basis.right.x+(point.y-basis.origin.y)*basis.right.y;
+  const forwardDrag=(point.x-start.x)*basis.forward.x+(point.y-start.y)*basis.forward.y;
+  return {...dragInput(basis.span/2+lateral,-forwardDrag,basis.span),forwardDrag};
 }

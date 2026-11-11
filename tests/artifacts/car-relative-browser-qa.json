@@ -1,0 +1,472 @@
+{
+  "site": "http://127.0.0.1:4173",
+  "recording": false,
+  "started": "2026-11-11T11:05:28.786Z",
+  "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
+  "cases": [
+    {
+      "input": "mouse",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "mouse",
+      "name": "right-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "right-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "right-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "right-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "right-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "down-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "down-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "down-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "down-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "down-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "left-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "left-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "left-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "left-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "left-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "up-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "up-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "up-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "up-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "up-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "diagonal-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "diagonal-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "diagonal-right-steering",
+      "gear": "R",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "diagonal-left-steering",
+      "gear": "D",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "diagonal-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "initial-audio-activation",
+      "status": "点線の車形に合わせて、停めてみましょう",
+      "sound": "テスト音の再生を開始しました。",
+      "signal": "成功音：音声の波形を確認しました",
+      "contexts": [],
+      "gate": true
+    },
+    {
+      "input": "touch",
+      "name": "right-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "right-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "right-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "right-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "right-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "down-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "down-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "down-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "down-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "down-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "left-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "left-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "left-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "left-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "left-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "up-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "up-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "up-right-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "up-left-steering",
+      "gear": "N",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "up-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "diagonal-forward",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "diagonal-reverse",
+      "gear": "R",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "diagonal-right-steering",
+      "gear": "R",
+      "speed": "0.0",
+      "tire": "12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "diagonal-left-steering",
+      "gear": "D",
+      "speed": "0.0",
+      "tire": "-12°",
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "diagonal-straight-band",
+      "gear": "D",
+      "speed": "3.6",
+      "tire": "0°",
+      "passed": true
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.47",
+    "revision": "@1d17a2e2ee147bb7d6ae2ab6abdb3a2510c17775",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.19"
+  },
+  "finished": "2026-11-11T11:05:43.049Z"
+}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CAR, STEERING_DEAD_ZONE, advance, corners, overlaps, dragInput } from '../dist/physics.js';
+import { CAR, STEERING_DEAD_ZONE, advance, corners, overlaps, dragInput, createControlBasis, pointerInput } from '../dist/physics.js';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
 test('absolute steering and vertical drag input preserve their mappings',()=>{
   near(dragInput(200,0,400).wheel,0);
@@ -49,4 +49,17 @@ test('oriented collision detects overlapping and separated cars',()=>{
   const a=corners({x:0,y:0,heading:Math.PI/4});
   assert.ok(overlaps(a,corners({x:1,y:0,heading:-Math.PI/4})));
   assert.ok(!overlaps(a,corners({x:10,y:0,heading:0})));
+});
+
+test('car-relative control axes work facing up, right, down, left, and diagonally',()=>{
+  for(const heading of [-Math.PI/2,0,Math.PI/2,Math.PI,Math.PI/4]){
+    const origin={x:200,y:300},basis=createControlBasis(origin,heading,400,600);
+    const point=(forward,right)=>({x:origin.x+basis.forward.x*forward+basis.right.x*right,y:origin.y+basis.forward.y*forward+basis.right.y*right});
+    near(pointerInput(point(50,0),origin,basis).speed,1);
+    near(pointerInput(point(-50,0),origin,basis).speed,-1);
+    near(pointerInput(point(50,0),origin,basis).wheel,0);
+    near(pointerInput(point(0,basis.span/2),origin,basis).wheel,CAR.maxWheel);
+    near(pointerInput(point(0,-basis.span/2),origin,basis).wheel,-CAR.maxWheel);
+    for(const offset of [-1,0,1])near(pointerInput(point(50,offset*basis.span*STEERING_DEAD_ZONE),origin,basis).wheel,0);
+  }
 });

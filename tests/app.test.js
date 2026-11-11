@@ -12,7 +12,7 @@ const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function setup(play=true) {
   const elements=new Map(),events={},windowEvents={},audio=createAudioMock();
   const element=id=>{
-    if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},focus(){},addEventListener(){},setPointerCapture(){},reportValidity(){return true;},getContext(){return {};},getBoundingClientRect(){return {left:20,width:400};}});
+    if(!elements.has(id))elements.set(id,{textContent:'',style:{},checked:true,attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},focus(){},addEventListener(){},setPointerCapture(){},reportValidity(){return true;},getContext(){return {};},getBoundingClientRect(){return {left:20,top:0,width:400,height:600};}});
     return elements.get(id);
   };
   const document={getElementById:element,addEventListener(k,fn){events[k]=fn;}};
@@ -86,6 +86,22 @@ test('thumbnail selection opens play, returning stops the car, and unknown maps 
   assert.equal(read('activeScreen'),'maps');assert.equal(read('speed'),0);assert.equal(read('drag'),null);
   read("window.location.hash='#play/missing'");windowEvents.hashchange();
   assert.equal(element('route-error').hidden,false);assert.match(element('route-error').textContent,/見つかりません/);
+});
+
+test('fixed-map gestures use the car direction at press time and preserve that basis through a turn',async()=>{
+  const {element,events,read,pointer}=setup();await element('sound-start').onclick();
+  for(const heading of [0,Math.PI/2,Math.PI,-Math.PI/2,Math.PI/4]){
+    read(`car={...layout.start,heading:${heading}}`);element('map-mode').onclick();
+    const basis=read('currentControlBasis(canvas.getBoundingClientRect())');
+    const point=(forward,right)=>pointer(basis.origin.x+basis.forward.x*forward+basis.right.x*right,basis.origin.y+basis.forward.y*forward+basis.right.y*right);
+    events.pointerdown(point(0,0));assert.equal(read('speed'),physics.CREEP_SPEED);assert.equal(read('wheel'),0);
+    events.pointermove(point(50,0));assert.ok(Math.abs(read('speed')-1)<1e-8);assert.ok(Math.abs(read('wheel'))<1e-8);
+    events.pointermove(point(-50,0));assert.ok(Math.abs(read('speed')+1)<1e-8);
+    events.pointermove(point(0,basis.span*.25));assert.ok(read('wheel')>0);
+    read('car.heading+=Math.PI/3');events.pointermove(point(50,0));
+    assert.ok(Math.abs(read('speed')-1)<1e-8);assert.ok(Math.abs(read('wheel'))<1e-8,'turning must not rotate an active gesture');
+    await events.pointerup(point(50,0));assert.equal(read('speed'),0);
+  }
 });
 
 test('collision audio survives suspension, sounds while held, and rearms on a new drag',async()=>{

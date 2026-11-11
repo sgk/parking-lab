@@ -7,6 +7,7 @@ const recording=!process.argv.includes('--no-recording');
 const scenariosMode=process.argv.includes('--scenarios');
 const deadZoneMode=process.argv.includes('--dead-zone');
 const creepMode=process.argv.includes('--creep');
+const relativeMode=process.argv.includes('--car-relative');
 const output=path.resolve('tests/artifacts');
 await fs.mkdir(output,{recursive:true});
 const profile=await fs.mkdtemp('/tmp/parking-lab-chrome-');
@@ -68,7 +69,7 @@ __parkingQA.finishRecording=()=>new Promise(resolve=>{
  };
  __parkingQA.recorder.stop();
 });`;
-const resultsFile=creepMode?'creep-browser-qa.json':deadZoneMode?'dead-zone-browser-qa.json':scenariosMode?'scenarios-browser-qa.json':recording?'browser-qa.json':'browser-qa-unrecorded.json';
+const resultsFile=relativeMode?'car-relative-browser-qa.json':creepMode?'creep-browser-qa.json':deadZoneMode?'dead-zone-browser-qa.json':scenariosMode?'scenarios-browser-qa.json':recording?'browser-qa.json':'browser-qa-unrecorded.json';
 const results={site:origin,recording,started:new Date().toISOString(),scope:'Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.',cases:[]};
 try {
   results.browser=await send('Browser.getVersion');
@@ -113,6 +114,43 @@ try {
     const gate=await rect('#sound-start');await down(gate);await wait(80);await up(gate);await wait(1500);
     results.cases.push({input,name:'initial-audio-activation',...await snapshot()});
     console.log(JSON.stringify({phase:'activated',input,...await snapshot()}));
+    if(relativeMode){
+      await send('Debugger.enable',{},s);
+      const source=await fs.readFile('dist/app.js','utf8');
+      const line=source.slice(0,source.indexOf('  parkedOk=!drag && speed===0 && !blocked(car)')).split('\n').length-1;
+      for(const [label,heading] of [['right',0],['down',Math.PI/2],['left',Math.PI],['up',-Math.PI/2],['diagonal',Math.PI/4]]){
+        await evaluate("document.querySelector('#reset').click();document.querySelector('.simulation').scrollIntoView({block:'center'})");
+        const position=await rect('#scene');
+        const breakpoint=await send('Debugger.setBreakpointByUrl',{urlRegex:'/app\\.js',lineNumber:line},s);
+        await down(position);const paused=once('Debugger.paused',s);const released=up(position);const pause=await paused;
+        await send('Debugger.evaluateOnCallFrame',{callFrameId:pause.callFrames[0].callFrameId,expression:`car={...layout.start,heading:${heading}};speed=0;wheel=0;`},s);
+        await send('Debugger.removeBreakpoint',{breakpointId:breakpoint.breakpointId},s);await send('Debugger.resume',{},s);await released;
+        await evaluate("document.querySelector('#map-mode').click()");
+        const bounds=await evaluate("(()=>{const r=document.querySelector('#scene').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2-.5,width:r.width,height:r.height};})()");
+        const forward={x:Math.cos(heading),y:Math.sin(heading)},right={x:-Math.sin(heading),y:Math.cos(heading)};
+        const span=Math.abs(right.x)*bounds.width+Math.abs(right.y)*bounds.height;
+        const point=(f,r)=>({x:bounds.x+forward.x*f+right.x*r,y:bounds.y+forward.y*f+right.y*r});
+        async function check(name,p,gear,tireSign){
+          await move(p);await wait(100);
+          const state=await evaluate("({gear:document.querySelector('#gear').textContent,speed:document.querySelector('#speed').textContent,tire:document.querySelector('#tire-text').textContent})");
+          const angle=parseInt(state.tire),passed=(!gear||state.gear===gear)&&(tireSign===0?angle===0:angle*tireSign>0);
+          results.cases.push({input,name:`${label}-${name}`,...state,passed});if(!passed)throw Error(`${input}/${label}/${name}: relative controls failed`);
+        }
+        await down(point(0,0));
+        await check('forward',point(50,0),'D',0);
+        await check('reverse',point(-50,0),'R',0);
+        await check('right-steering',point(0,span*.2),null,1);
+        await check('left-steering',point(0,-span*.2),null,-1);
+        await check('straight-band',point(50,span*.04),'D',0);
+        await send('Page.captureScreenshot',{format:'png'},s).then(r=>fs.writeFile(path.join(output,`${input}-relative-${label}.png`),Buffer.from(r.data,'base64')));
+        await up(point(50,span*.04));
+      }
+      await evaluate("document.querySelector('#car-mode').click()");const position=await rect('#scene');await down(position);
+      await move({x:position.x,y:position.y-50});await wait(100);
+      if(!await evaluate("document.querySelector('#gear').textContent==='D'&&document.querySelector('#tire-text').textContent==='0°'"))throw Error(`${input}: fixed-car controls changed`);
+      await up(position);console.log(JSON.stringify({phase:'car-relative-verified',input}));
+      await send('Target.closeTarget',{targetId});continue;
+    }
     if(creepMode){
       await evaluate("document.querySelector('.simulation').scrollIntoView({block:'center'})");
       const bounds=await evaluate("(()=>{const r=document.querySelector('#scene').getBoundingClientRect();return {left:r.left,width:r.width,y:r.top+r.height/2};})()");
