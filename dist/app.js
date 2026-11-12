@@ -1,6 +1,6 @@
 import { CAR, STEERING_DEAD_ZONE, ACCEL_DEAD_ZONE, advance, corners, createControlBasis, pointerInput } from './physics.js?v=position-controls-1';
 import { DEFAULT_LAYOUT, DIMENSION_LIMITS, SCENARIOS, getScenario, createLayout, isBlocked, isParked, isAtTarget, targetAlignment } from './layout.js?v=scenarios-1';
-import { createCollisionSound } from './sound.js?v=signal-1';
+import { createCollisionSound } from './sound.js?v=silent-unlock-1';
 import { mapCards } from './thumbnails.js?v=gallery-1';
 
 const $ = id => document.getElementById(id);
@@ -14,7 +14,7 @@ const collisionSound = createCollisionSound(window.AudioContext, message => {
   const messages={scheduled:'再生を予約しました',signal:'音声の波形を確認しました',paused:'音声処理が停止しました','not-observed':'音声の波形を確認できませんでした',failed:'音声を開始できませんでした'};
   $('sound-signal').textContent=`${label}：${messages[event.phase]}`;
 });
-let contactPosition=null, audioReady=false, gestureVersion=0;
+let contactPosition=null, gestureVersion=0;
 let layout = createLayout();
 let mapCenter = {x:24,y:16.8}, overview=false, activeScreen='maps', galleryScroll=0;
 let car, wheel=0, speed=0, drag=null, mode='car', trace=[], lastTime=0, lastTrace=null, collision=false, parkedOk=false, successCelebrated=false;
@@ -91,17 +91,11 @@ async function playEffect(kind, label=kind==='success'?'成功音':'衝突音') 
   return played;
 }
 async function enableSound() {
-  stop();$('sound-test').disabled=true;$('sound-start').disabled=true;
-  const ready=await playEffect('success','テスト音');
-  $('sound-test').disabled=false;$('sound-start').disabled=false;$('sound-status').hidden=false;
-  if(ready){
-    audioReady=true;contactPosition=null;$('sound-gate').hidden=true;
-  } else if(!$('sound-status').textContent) {
-    $('sound-status').textContent='音声が停止しています。ブラウザの音声設定を確認して再読み込みしてください。';
-  }
-  $('sound-start-status').textContent=ready?'':$('sound-status').textContent;
+  stop();$('sound-test').disabled=true;
+  await playEffect('success','テスト音');
+  $('sound-test').disabled=false;
 }
-$('sound-test').onclick=enableSound;$('sound-start').onclick=enableSound;
+$('sound-test').onclick=enableSound;
 $('collision-test').onclick=()=>{stop();return playEffect('collision','衝突テスト音');};
 function syncDimensions() {
   for(const key of Object.keys(DEFAULT_LAYOUT)){
@@ -153,7 +147,8 @@ function applyPointerInput() {
 }
 document.addEventListener('pointerdown',e=>{
   if(e.target.closest('button, a, input, select, option, label, dialog'))return;
-  if(activeScreen!=='play' || !audioReady || drag || (e.pointerType==='mouse' && e.button!==0))return;
+  if(activeScreen!=='play' || drag || (e.pointerType==='mouse' && e.button!==0))return;
+  void collisionSound.unlock();
   contactPosition=null;successCelebrated=false;parkedOk=false;gestureVersion++;
   e.preventDefault();canvas.setPointerCapture(e.pointerId);
   drag={id:e.pointerId,x:e.clientX,y:e.clientY};

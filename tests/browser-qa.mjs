@@ -93,7 +93,7 @@ try {
     const down=async p=>input==='mouse'?send('Input.dispatchMouseEvent',{type:'mousePressed',x:p.x,y:p.y,button:'left',clickCount:1},s):send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:p.x,y:p.y,id:1}]},s);
     const move=async p=>input==='mouse'?send('Input.dispatchMouseEvent',{type:'mouseMoved',x:p.x,y:p.y,button:'left',buttons:1},s):send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:p.x,y:p.y,id:1}]},s);
     const up=async p=>input==='mouse'?send('Input.dispatchMouseEvent',{type:'mouseReleased',x:p.x,y:p.y,button:'left',clickCount:1},s):send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]},s);
-    const snapshot=()=>evaluate(`({status:document.querySelector('#status').textContent,sound:document.querySelector('#sound-status').textContent,signal:document.querySelector('#sound-signal').textContent,contexts:typeof __parkingQA==='undefined'?[]:__parkingQA.contexts.map(c=>({state:c.state,time:c.currentTime,sampleRate:c.sampleRate})),gate:document.querySelector('#sound-gate').hidden})`);
+    const snapshot=()=>evaluate(`({status:document.querySelector('#status').textContent,sound:document.querySelector('#sound-status').textContent,signal:document.querySelector('#sound-signal').textContent,contexts:typeof __parkingQA==='undefined'?[]:__parkingQA.contexts.map(c=>({state:c.state,time:c.currentTime,sampleRate:c.sampleRate})),gateAbsent:!document.querySelector('#sound-gate')})`);
     const gallery=await evaluate("({count:document.querySelectorAll('.map-card').length,svg:document.querySelectorAll('.map-card svg').length,visible:!document.querySelector('#map-screen').hidden,playHidden:document.querySelector('#play-screen').hidden,overflow:document.documentElement.scrollWidth>innerWidth})");
     if(gallery.count!==10||gallery.svg!==10||!gallery.visible||!gallery.playHidden||gallery.overflow)throw Error(`${input}: invalid thumbnail gallery`);
     results.cases.push({input,name:'thumbnail-gallery',...gallery,passed:true});
@@ -109,10 +109,13 @@ try {
       results.cases.push({input,name:'thumbnail-selection',id,...route,passed:true});
     }
     await selectMap('standard');
-    await evaluate("document.querySelector('#sound-start').scrollIntoView({block:'center'})");
-    const gate=await rect('#sound-start');await down(gate);await wait(80);await up(gate);await wait(1500);
-    results.cases.push({input,name:'initial-audio-activation',...await snapshot()});
-    console.log(JSON.stringify({phase:'activated',input,...await snapshot()}));
+    if(!await evaluate("!document.querySelector('#sound-gate')&&!document.querySelector('#sound-start')"))throw Error(`${input}: start gate was not removed`);
+    await evaluate("document.querySelector('.simulation').scrollIntoView({block:'center'})");
+    const firstPress=await rect('#scene');await down(firstPress);await wait(80);await up(firstPress);await wait(150);
+    const activation=await snapshot();
+    if(activation.sound||activation.signal!=='音声の確認待ち')throw Error(`${input}: first press unexpectedly played a test sound`);
+    results.cases.push({input,name:'silent-initial-audio-activation',...activation,passed:true});
+    console.log(JSON.stringify({phase:'activated',input,...activation}));
     if(absoluteMode){
       await send('Debugger.enable',{},s);
       const source=await fs.readFile('dist/app.js','utf8');
@@ -216,6 +219,7 @@ try {
       await send('Target.closeTarget',{targetId});continue;
     }
     const canvas=await rect('#scene');
+    const wallPoint={x:canvas.x,y:await evaluate("document.querySelector('#scene').getBoundingClientRect().top+1")};
     async function capture(name,action,duration){
       const eventStart=await evaluate('__parkingSignalEvents.length');
       if(recording)await evaluate('__parkingQA.startRecording()');await action();await wait(duration);
@@ -226,14 +230,14 @@ try {
       results.cases.push({input,name,file,...state});console.log(JSON.stringify({phase:'case',input,name,...state}));
       if(!state.passed)throw Error(`${input}/${name}: collision or fresh audio signal was not observed`);
     }
-    await capture('drive-into-wall',async()=>{await down(canvas);await move({x:canvas.x,y:canvas.y-110});},10000);
+    await capture('drive-into-wall',async()=>{await down(canvas);await move(wallPoint);},10000);
     await up(canvas);await wait(300);
-    await capture('repeat-same-wall',async()=>{await down(canvas);await move({x:canvas.x,y:canvas.y-110});},1200);
+    await capture('repeat-same-wall',async()=>{await down(canvas);await move(wallPoint);},1200);
     await up(canvas);await wait(300);
     await capture(recording?'suspended-audio-wall':'after-idle-wall',async()=>{
       if(recording)await evaluate('__parkingQA.contexts[0].suspend()');
       else await wait(2000);
-      await down(canvas);await move({x:canvas.x,y:canvas.y-110});
+      await down(canvas);await move(wallPoint);
     },1200);
     await up(canvas);await wait(300);
     // Establish a valid parking pose at the release handler to isolate audio

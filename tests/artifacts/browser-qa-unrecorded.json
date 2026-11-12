@@ -1,17 +1,37 @@
 {
-  "site": "https://parking-lab-sgk-20261106.playfuldart.chatgpt.site",
+  "site": "http://127.0.0.1:4173",
   "recording": false,
-  "started": "2026-11-06T13:44:32.271Z",
+  "started": "2026-11-12T04:21:46.918Z",
   "scope": "Real Linux Chrome, desktop and emulated touch. Does not verify Android hardware or physical speakers. Success pose is established with the debugger to isolate the audio integration.",
   "cases": [
     {
       "input": "mouse",
-      "name": "initial-audio-activation",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "mouse",
+      "name": "silent-initial-audio-activation",
       "status": "点線の車形に合わせて、停めてみましょう",
-      "sound": "テスト音の再生を開始しました。",
-      "signal": "成功音：音声の波形を確認しました",
+      "sound": "",
+      "signal": "音声の確認待ち",
       "contexts": [],
-      "gate": true
+      "gateAbsent": true,
+      "passed": true
     },
     {
       "input": "mouse",
@@ -21,7 +41,7 @@
       "sound": "衝突音の再生を開始しました。",
       "signal": "衝突音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "衝突音：再生を予約しました",
         "衝突音：音声の波形を確認しました"
@@ -36,7 +56,7 @@
       "sound": "衝突音の再生を開始しました。",
       "signal": "衝突音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "衝突音：再生を予約しました",
         "衝突音：音声の波形を確認しました"
@@ -51,7 +71,7 @@
       "sound": "衝突音の再生を開始しました。",
       "signal": "衝突音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "衝突音：再生を予約しました",
         "衝突音：音声の波形を確認しました"
@@ -66,7 +86,7 @@
       "sound": "成功音の再生を開始しました。",
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "成功音：再生を予約しました",
         "成功音：音声の波形を確認しました"
@@ -75,12 +95,32 @@
     },
     {
       "input": "touch",
-      "name": "initial-audio-activation",
+      "name": "thumbnail-gallery",
+      "count": 10,
+      "svg": 10,
+      "visible": true,
+      "playHidden": true,
+      "overflow": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "thumbnail-selection",
+      "id": "standard",
+      "hash": "#play/standard",
+      "mapsHidden": true,
+      "playHidden": false,
+      "passed": true
+    },
+    {
+      "input": "touch",
+      "name": "silent-initial-audio-activation",
       "status": "点線の車形に合わせて、停めてみましょう",
-      "sound": "テスト音の再生を開始しました。",
-      "signal": "成功音：音声の波形を確認しました",
+      "sound": "",
+      "signal": "音声の確認待ち",
       "contexts": [],
-      "gate": true
+      "gateAbsent": true,
+      "passed": true
     },
     {
       "input": "touch",
@@ -90,7 +130,7 @@
       "sound": "衝突音の再生を開始しました。",
       "signal": "衝突音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "衝突音：再生を予約しました",
         "衝突音：音声の波形を確認しました"
@@ -105,7 +145,7 @@
       "sound": "衝突音の再生を開始しました。",
       "signal": "衝突音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "衝突音：再生を予約しました",
         "衝突音：音声の波形を確認しました"
@@ -120,7 +160,7 @@
       "sound": "衝突音の再生を開始しました。",
       "signal": "衝突音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "衝突音：再生を予約しました",
         "衝突音：音声の波形を確認しました"
@@ -135,7 +175,7 @@
       "sound": "成功音の再生を開始しました。",
       "signal": "成功音：音声の波形を確認しました",
       "contexts": [],
-      "gate": true,
+      "gateAbsent": true,
       "newSignalEvents": [
         "成功音：再生を予約しました",
         "成功音：音声の波形を確認しました"
@@ -150,5 +190,5 @@
     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "jsVersion": "15.6.75.19"
   },
-  "finished": "2026-11-06T13:45:13.745Z"
+  "finished": "2026-11-12T04:22:24.075Z"
 }

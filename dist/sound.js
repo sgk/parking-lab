@@ -20,6 +20,7 @@ export function createCollisionSound(AudioContextClass, onError = () => {}, onPl
     } catch { fail(); return false; }
   }
   return {
+    unlock,
     async play(kind) {
       if (kind !== 'success' && kind !== 'collision') throw new TypeError('Unknown sound');
       const id=++requestId;

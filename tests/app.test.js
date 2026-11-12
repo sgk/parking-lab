@@ -25,6 +25,17 @@ function setup(play=true) {
   return {element,events,windowEvents,audio,read,pointer,navigate};
 }
 
+test('the first driving press starts immediately and silently unlocks audio without a start button',async()=>{
+  const {events,audio,read,pointer}=setup();
+  assert.equal(audio.contexts.length,0);
+  events.pointerdown(pointer());assert.ok(read('speed')>0);assert.equal(read('drag.id'),1);
+  assert.equal(audio.contexts.length,1);assert.equal(audio.contexts[0].resumes,1);
+  await flush();assert.equal(audio.oscillators().length,0,'activation must not play a test chime');
+  read('car={x:layout.right-CAR.length/2-.005,y:layout.start.y,heading:0};wheel=0;speed=1;update(.02)');
+  await flush();assert.equal(audio.oscillators().length,1,'the first actual collision uses the unlocked context');
+  await events.pointerup(pointer());assert.equal(read('speed'),0);
+});
+
 test('controls, dimension changes, camera and reset remain functional',async()=>{
   const {element,events,windowEvents,audio,read,pointer,navigate}=setup();
   assert.equal(read('mode'),'car');
@@ -33,8 +44,7 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
   element('bayWidth').value='4.0';element('bayWidth-plus').onclick();assert.equal(element('bayWidth').value,'4.0');assert.equal(element('bayWidth-plus').disabled,true);
   element('bayWidth').value='2.2';element('bayWidth-minus').onclick();assert.equal(element('bayWidth').value,'2.2');assert.equal(element('bayWidth-minus').disabled,true);
   element('layout-defaults').onclick();
-  events.pointerdown(pointer());assert.equal(read('drag'),null);
-  await element('sound-start').onclick();assert.equal(read('audioReady'),true);assert.equal(audio.oscillators().length,6);
+  await element('sound-test').onclick();assert.equal(audio.oscillators().length,6);
   events.pointerdown(pointer());assert.ok(read('speed')>0);assert.equal(read('wheel'),0);
   events.pointermove(pointer(320,150));assert.ok(read('speed')>0);assert.ok(Math.abs(read('wheel')-4*Math.PI/3)<1e-8);
   events.pointermove(pointer(235,150));assert.equal(read('wheel'),0);assert.ok(read('speed')>0);
@@ -57,7 +67,7 @@ test('controls, dimension changes, camera and reset remain functional',async()=>
 });
 
 test('absolute press positions control both modes immediately, change while held, and stop on release',async()=>{
-  const {element,events,read,pointer}=setup();await element('sound-start').onclick();
+  const {element,events,read,pointer}=setup();await element('sound-test').onclick();
   for(const mode of ['car','map']){
     element('reset').onclick();element(`${mode}-mode`).onclick();
     const basis=read('currentControlBasis(canvas.getBoundingClientRect())');
@@ -81,7 +91,7 @@ test('thumbnail selection opens play, returning stops the car, and unknown maps 
   const {element,events,windowEvents,read,pointer}=setup(false);
   assert.equal(read('activeScreen'),'maps');assert.equal(element('play-screen').hidden,true);
   assert.equal((element('map-gallery').innerHTML.match(/class="map-card"/g)||[]).length,10);
-  read('audioReady=true');events.pointerdown(pointer());assert.equal(read('drag'),null);
+  events.pointerdown(pointer());assert.equal(read('drag'),null);
   element('map-gallery').onclick({target:{closest:()=>({dataset:{scenario:'forward'}})}});
   windowEvents.hashchange();assert.equal(read('activeScreen'),'play');assert.equal(read('layout.scenarioId'),'forward');
   assert.equal(element('map-screen').hidden,true);assert.equal(read('mode'),'car');
@@ -92,7 +102,7 @@ test('thumbnail selection opens play, returning stops the car, and unknown maps 
 });
 
 test('held positions follow the current car center and orientation without another pointer event',async()=>{
-  const {element,events,read,pointer}=setup();await element('sound-start').onclick();element('map-mode').onclick();
+  const {element,events,read,pointer}=setup();await element('sound-test').onclick();element('map-mode').onclick();
   for(const heading of [0,Math.PI/2,Math.PI,-Math.PI/2,Math.PI/4]){
     read(`car={...layout.start,heading:${heading}}`);element('map-mode').onclick();
     const basis=read('currentControlBasis(canvas.getBoundingClientRect())');
@@ -106,7 +116,7 @@ test('held positions follow the current car center and orientation without anoth
 });
 
 test('ending a fixed-map gesture centers only the camera and preserves the car pose and north-up direction',async()=>{
-  const {element,events,read,pointer}=setup();await element('sound-start').onclick();element('map-mode').onclick();
+  const {element,events,read,pointer}=setup();await element('sound-test').onclick();element('map-mode').onclick();
   const original=read('({...mapCenter})'),basis=read('currentControlBasis(canvas.getBoundingClientRect())');
   events.pointerdown(pointer(basis.origin.x,basis.origin.y));read('speed=1;update(.5)');
   assert.equal(read('mapCenter.x'),original.x,'the map stays fixed during a gesture');
@@ -124,7 +134,7 @@ test('ending a fixed-map gesture centers only the camera and preserves the car p
 });
 
 test('collision audio survives suspension, sounds while held, and rearms on a new drag',async()=>{
-  const {element,events,audio,read,pointer}=setup();await element('sound-start').onclick();
+  const {element,events,audio,read,pointer}=setup();await element('sound-test').onclick();
   const context=audio.contexts[0];context.state='suspended';
   events.pointerdown(pointer());
   read('car={x:layout.right-CAR.length/2-.005,y:layout.start.y,heading:0};wheel=0;speed=1;update(.02)');
@@ -139,7 +149,7 @@ test('collision audio survives suspension, sounds while held, and rearms on a ne
 });
 
 test('success audio uses the exact test path, waits for resume, and repeats on each new successful operation',async()=>{
-  const {element,events,audio,read,pointer}=setup();await element('sound-start').onclick();
+  const {element,events,audio,read,pointer}=setup();await element('sound-test').onclick();
   events.pointerdown(pointer());read('car={...layout.target};speed=0;update(.02)');
   assert.equal(read('parkedOk'),false);assert.equal(audio.oscillators().length,6);
   const context=audio.contexts[0];let finish;context.state='suspended';context.resumeGate=new Promise(resolve=>{finish=resolve;});
@@ -153,7 +163,7 @@ test('success audio uses the exact test path, waits for resume, and repeats on e
 });
 
 test('a cancelled gesture cannot show a success message without requesting success audio',async()=>{
-  const {element,events,audio,read,pointer}=setup();await element('sound-start').onclick();
+  const {element,events,audio,read,pointer}=setup();await element('sound-test').onclick();
   events.pointerdown(pointer());read('car={...layout.target};speed=0');
   await events.pointercancel(pointer());read('update(.02)');
   assert.equal(read('parkedOk'),false);assert.doesNotMatch(element('status').textContent,/駐車成功/);
